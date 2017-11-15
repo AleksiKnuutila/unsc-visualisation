@@ -1,0 +1,614 @@
+/*
+Theme Name:     The Global Initiative
+Theme URI: 		http://themeforest.net/user/artbees
+Description:    Child theme for the Jupiter theme
+Author:         Roomwoorks Media
+Theme URI: 		http://themeforest.net/user/artbees
+Template:       jupiter
+Version:        1.0.1
+*/
+/*
+Sample : remove the comment and start adding your own custom CSS rules.
+body {
+background-color:#fff;
+}
+*/
+/*.col-md-12 {padding: 0px !important;}*/
+
+
+.theme-content .rw_list_items ul li {
+width: 30%;
+float: left;
+}
+
+.theme-content article li{
+list-style: disc !important;
+display: list-item !important;
+color: #000 !important;
+}
+
+.theme-content ul {
+list-style: disc !important;
+}
+
+.widget.widget_recent_portfolio.mk-in-viewport ul{
+	list-style: none !important;
+}
+
+ul.flex-direction-nav{
+	list-style: none !important;
+}
+
+.theme-content li.sf-field-search, li.sf-field-taxonomy-document, li.sf-field-tag, li.sf-field-submit {
+	display:inline-block;
+	float:left;
+	}
+	
+.searchandfilter ul li {
+	margin-right: 10px !important;
+	}
+
+#mk-footer .widget_nav_menu ul {
+list-style: none !important;
+}
+
+
+#theme-page .theme-page-wrapper .theme-content {
+    padding: 30px 0px;
+}
+.grid-item { width: 31.5%; }
+ul.rw_ul.multifilter li.cat-item {
+display: inline-block;
+list-style: none;
+background-color: #efefef;
+padding: 10px 30px;
+}
+li.cat-item a{
+}
+.col-md-12.rw_category_heading {
+text-align: center;
+}
+.col-md-12.rw_category_list {
+margin-bottom: 30px;
+}
+.col-md-12.rw_forms {
+margin-bottom: 30px;
+padding: 30px 0px;
+}
+.col-md-4.rw_category_containers {
+margin-left: 0px;
+margin-right: 0px;
+padding-left: 0px;
+padding-right: 0px;
+}
+ul.list-group.rw_list_group {
+margin-left: 0px;
+min-height: 470px;
+}
+.col-md-12.rw_category_icon {
+text-align: center;
+font-size: 60px;
+margin: 30px 0px;
+}
+article li {
+list-style: none;
+display: inline-block;
+margin-right: 5px;
+}
+.rw-extension-inner {
+}
+.single-post-tags a {
+line-height: 14px;
+font-size: 14px;
+color: #999;
+}
+.master-holder h1, .master-holder h2, .master-holder h4 {
+font-size: 14px;
+}
+.single-post-tags a:hover {
+	color: #f97352;
+	}
+
+.col-md-12.rw_pagination {
+	text-align: center;
+}
+
+/*Widget Titles*/
+
+.master-holder h1, .master-holder h2, .master-holder h4, h2 .rounded {
+    /*text-transform: uppercase !important;*/
+    /*font-size: 14px !important;*/
+    /*color: #333333 !important;*/
+    /*font-weight: bolder !important;*/
+    /*font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, "Lucida Grande", sans-serif;*/
+}
+
+/* Tag Cloud */
+
+.tagcloud a, .wpctc-wpctc_widget-2 a, .wpctc-wpctc_widget-3 a {
+    display: inline-block;
+    margin: 8px 3px 0 0;
+    padding: 8px 10px;
+    border: 2px solid rgba(0,0,0,.1);
+    text-transform: capitalize;
+    font-size: 12px!important;
+    line-height: 100%;
+}
+
+/* Search And Filter */
+.searchandfilter ul, .searchandfilter li {
+margin-left: 0px !important;
+}
+.searchandfilter ul li input[type=submit] {
+padding: 10px 20px;
+border: none;
+color: #fff;
+}
+
+form.searchandfilter {
+	margin-bottom: 30px !important;
+	}
+
+/* Single Page Image */
+
+.col-md-3.rw_single_image {
+	padding-left: 0px !important;
+	}
+	
+.col-md-8.rw_doc_details .col-md-9 a h4{
+color: #42c4dd !important;
+}
+
+.col-md-8.rw_doc_details .col-md-9 a h4:hover {
+color: #a9ae37 !important;
+}	
+/* Archive Page */	
+
+.col-md-9.rw_archive_area {
+	padding-left: 0px;
+	}
+	
+.col-md-9.rw_archive_area ul{
+	margin-left: 0px !important;
+	}
+	
+.col-md-9.rw_archive_area .list-group-item	{
+	margin-left: 0px !important;
+	}	
+	
+.page-id-148 .col-md-12.rw_forms {
+    margin-bottom: 30px;
+    padding: 10px 30px;
+}
+
+.master-holder h1 {
+	padding-top: 45px !important;
+	}
+
+	
+	
+/* ----------- iPhone 4 and 4S ----------- */
+/* Portrait and Landscape */	
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 480px)
+and (-webkit-min-device-pixel-ratio: 2) {
+
+.rw_list_items ul li {
+width: 100%;
+float: none;
+}
+
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+.searchandfilter ul, .searchandfilter li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.searchandfilter ul input, .searchandfilter li input{
+	width:  100%;
+}
+.searchandfilter ul select, .searchandfilter li select{
+	width:  100%;
+}
+.searchandfilter ul li input[type=submit] {
+	color: #000 !important;
+}
+.grid-item { width: 100%; }
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 480px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 480px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: landscape) {
+}
+/* ----------- iPhone 5 and 5S ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2) {
+
+.rw_list_items ul li {
+width: 100%;
+float: none;
+}
+
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+.searchandfilter ul, .searchandfilter li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.searchandfilter ul input, .searchandfilter li input{
+	width:  100%;
+}
+.searchandfilter ul select, .searchandfilter li select{
+	width:  100%;
+}
+.searchandfilter ul li input[type=submit] {
+	color: #000 !important;
+}
+.grid-item { width: 100%; }
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 320px)
+and (max-device-width: 568px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: landscape) {
+}
+/* ----------- iPhone 6 ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 375px)
+and (max-device-width: 667px)
+and (-webkit-min-device-pixel-ratio: 2) {
+
+.rw_list_items ul li {
+width: 100%;
+float: none;
+}
+
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+.searchandfilter ul, .searchandfilter li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.searchandfilter ul input, .searchandfilter li input{
+	width:  100%;
+}
+.searchandfilter ul select, .searchandfilter li select{
+	width:  100%;
+}
+.searchandfilter ul li input[type=submit] {
+	color: #000 !important;
+}
+.grid-item { width: 100%; }
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 375px)
+and (max-device-width: 667px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: portrait) {
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 375px)
+and (max-device-width: 667px)
+and (-webkit-min-device-pixel-ratio: 2)
+and (orientation: landscape) {
+}
+/* ----------- iPhone 6+ ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 414px)
+and (max-device-width: 736px)
+and (-webkit-min-device-pixel-ratio: 3) {
+
+.rw_list_items ul li {
+width: 100%;
+float: none;
+}
+
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+.searchandfilter ul, .searchandfilter li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.searchandfilter ul input, .searchandfilter li input{
+	width:  100%;
+}
+.searchandfilter ul select, .searchandfilter li select{
+	width:  100%;
+}
+.searchandfilter ul li input[type=submit] {
+	color: #000 !important;
+}
+.grid-item { width: 100%; }
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 414px)
+and (max-device-width: 736px)
+and (-webkit-min-device-pixel-ratio: 3)
+and (orientation: portrait) {
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 414px)
+and (max-device-width: 736px)
+and (-webkit-min-device-pixel-ratio: 3)
+and (orientation: landscape) {
+}
+/* ----------- iPad mini ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (-webkit-min-device-pixel-ratio: 1) {
+	
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: portrait)
+and (-webkit-min-device-pixel-ratio: 1) {
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+.grid-item { width: 47%; }
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: landscape)
+and (-webkit-min-device-pixel-ratio: 1) {
+	.grid-item { width: 30%; }
+	
+	ul.list-group.rw_list_group {
+    margin-left: 0px;
+    min-height: 550px;
+}
+}
+/* ----------- iPad 1 and 2 ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (-webkit-min-device-pixel-ratio: 1) {
+	
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: portrait)
+and (-webkit-min-device-pixel-ratio: 1) {
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+.grid-item { width: 47%; }
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: landscape)
+and (-webkit-min-device-pixel-ratio: 1) {
+	.grid-item { width: 30%; }
+	ul.list-group.rw_list_group {
+    margin-left: 0px;
+    min-height: 550px;
+}
+	
+	}
+/* ----------- iPad 3 and 4 ----------- */
+/* Portrait and Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (-webkit-min-device-pixel-ratio: 2) {
+	
+
+}
+/* Portrait */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: portrait)
+and (-webkit-min-device-pixel-ratio: 2) {
+.searchandfilter label  {
+	width: 100% !important;
+	}	
+.grid-item { width: 47%; }
+ul {
+margin-left: 0px;
+}
+.list-group-item {
+margin-left: 0px;
+}
+.col-md-8.rw_doc_details {
+}
+.col-md-8.rw_doc_details p{
+font-size: 14px;
+}
+.col-md-4.rw_doc_button {
+}
+.col-md-6.rw_author_content {
+margin-bottom: 30px;
+}
+}
+/* Landscape */
+@media only screen
+and (min-device-width: 768px)
+and (max-device-width: 1024px)
+and (orientation: landscape)
+and (-webkit-min-device-pixel-ratio: 2) {
+	.grid-item { width: 30%; }
+	ul.list-group.rw_list_group {
+    margin-left: 0px;
+    min-height: 550px;
+}
+	
+}
+
+/* General */
+@media only screen
+and (min-device-width 320px)
+and (max-device-width: 568px) {
+.searchandfilter ul, .searchandfilter li {
+	width: 100%;
+	margin-bottom: 10px;
+}
+.searchandfilter ul input, .searchandfilter li input{
+	width:  100%;
+}
+.searchandfilter ul select, .searchandfilter li select{
+	width:  100%;
+}
+.searchandfilter ul li input[type=submit] {
+	color: #000 !important;
+}
+}
