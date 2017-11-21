@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="vendor/jquery-2.1.0.js"></script>
+<script src="vendor/jquery.mousewheel.js"></script>
+<link href="vendor/select2.css" rel="stylesheet" />
+<script src="vendor/select2.js"></script>
+<script src="vendor/select2.optgroupSelect.js"></script>
+<link rel="stylesheet" type="text/css" href="vendor/select2.optgroupSelect.css">
 </head>
 <meta charset="utf-8">
 <style>
@@ -45,7 +48,7 @@ label {
 <body>
   <label><input type="checkbox"> Sort values</label>
 
-<script type="text/javascript" src="js/iframeResizer.contentWindow.min.js" defer></script>
+<script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script>
@@ -838,12 +841,16 @@ d3.csv("https://test-aleksi.hashbase.io/state_data.csv", function(error, data) {
 });
 
 */
-
 </script>
+
+<!--
+
 <br><br>
-<select class="js-example-basic-multiple" multiple="multiple">
+<select id="target" class="js-example-basic-multiple" multiple="multiple">
+  <optgroup label="America">
   <option style="font-size: 14px;" value="AL">Alabama</option>
   <option style="font-size: 14px;" value="WY">Wyoming</option>
+  </optgroup>
   <option style="font-size: 14px;" value="Afghanistan">Afghanistan</option>
   <option style="font-size: 14px;" value="Africa">Africa</option>
   <option style="font-size: 14px;" value="Angola">Angola</option>
@@ -886,13 +893,64 @@ d3.csv("https://test-aleksi.hashbase.io/state_data.csv", function(error, data) {
 
 <script>
 $(document).ready(function() {
-  $('.js-example-basic-multiple').select2({'width':'500px'});
-  $('.js-example-basic-multiple').on('change', function (evt) {
+// Retrieve the adapters!
+$.fn.select2.amd.require(["optgroup-data", "optgroup-results"], function (OptgroupData, OptgroupResults) {
+
+// Construct!
+    $('#target').select2({'width':'500px',
+        dataAdapter: OptgroupData,
+        resultsAdapter: OptgroupResults
+    });
+
+});
+
+  $('#target').on('change', function (evt) {
     var vals = $('.js-example-basic-multiple').select2('val');
     update_data(vals);
   });
 });
 </script>
+-->
+
+    <select multiple='multiple' style="width:200px" id='target'>
+        <optgroup label="Africa">
+            <option value='Afghanistan'>Afghanistan</option>
+            <option value='Sudan'>Sudan</option>
+			<option value='9'>Bed Stuy</option>
+        </optgroup>
+        <optgroup label="All Manhattan">
+            <option value='3'>Flatiron</option>
+            <option value='4'>Upper West Side</option>
+			<option value='10'>Manhattanville</option>
+        </optgroup>
+        <optgroup label="All Queens">
+            <option value='5'>Long Island City</option>
+            <option value='6'>Astoria</option>
+        </optgroup>
+    </select>
+	<script>
+	$(function(){
+	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
+	        function (OptgroupData, OptgroupResults) {
+	        $('#target').select2({
+	            dataAdapter: OptgroupData,
+	            resultsAdapter: OptgroupResults,
+	            closeOnSelect: false,
+				placeholder: "Search"
+	        });
+	    });
+	});
+
+  $('#target').on('change', function (evt) {
+    // because of select2 bugs, can't use val() here
+    //var vals = $('#target').select2().val();
+    var vals = $('#target').select2('data')
+    var selections = []
+    vals.forEach(function (e) { selections.push(e.text) });
+    update_data(selections);
+  });
+
+	</script>
 
 <script type="text/javascript" src="areas.js" defer></script>
 
