@@ -1,4 +1,9 @@
 <!DOCTYPE html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+</head>
 <meta charset="utf-8">
 <style>
 
@@ -89,9 +94,9 @@ var get_years = function get_years(data) {
   return unique_years.sort();
 }
 
-var get_type_count = function get_type_count(data, year, type) {
+var get_type_count = function get_type_count(data, year, type, selected_countries) {
   return data.reduce(function(total, element) {
-    if (element['Year'] == year && type in element) {
+    if (element['Year'] == year && type in element && ! (selected_countries && ! selected_countries.includes(element.Country))) {
       return total + parseInt(element[type]);
     } else {
       return total;
@@ -100,13 +105,13 @@ var get_type_count = function get_type_count(data, year, type) {
 }
 
 var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
-var aggregate_by_type = function aggregate_by_type(data) {
+var aggregate_by_type = function aggregate_by_type(data, selected_countries) {
   years = get_years(data);
   aggregated_data = {};
   years.forEach(function(year) {
     aggregated_data[year] = {};
     types.forEach(function(type) {
-      aggregated_data[year][type] = get_type_count(data, year, type);
+      aggregated_data[year][type] = get_type_count(data, year, type, selected_countries);
     });
   });
   return aggregated_data;
@@ -121,9 +126,133 @@ d3.select("label")
 // d3.csv("https://test-aleksi.hashbase.io/state_data.csv", function(error, data) {
 //   if (error) throw error;
 
-d3.csv('https://resolution-aleksi.hashbase.io/resolutions.csv', function(error, data) {
+var update_data = function update_data(selected_countries) {
+
+  agg_data = aggregate_by_type(glob_data, selected_countries);
+
+  // change data into form that can be easily used
+  years.forEach(function(year) {
+    var y0 = 0;
+    agg_data[year].resolutions = types.map(function(type) {
+      return {
+        year:year,
+        type:type,
+        y0: y0,
+        y1: y0 += +agg_data[year][type],
+        value:agg_data[year][type],
+        y_corrected: 0
+      };
+    });
+    agg_data[year].total = agg_data[year].resolutions[agg_data[year].resolutions.length - 1].y1;
+  });
+
+
+  total_vals = years.map(function(y) { return agg_data[y].total });
+  y.domain([0, d3.max(total_vals)]);
+  svg.transition()
+    .duration(750)
+    .select(".y.axis")
+    .call(yAxis)
+    .selectAll("g");
+
+//   svg.append("g")
+//       .attr("class", "x axis")
+//       .attr("transform", "translate(0," + height + ")")
+//       .call(xAxis);
+//
+//   svg.append("g")
+//       .attr("class", "y axis")
+//       .call(yAxis)
+//     .append("text")
+//       .attr("transform", "rotate(-90)")
+//       .attr("y", 6)
+//       .attr("dy", ".71em")
+//       .style("text-anchor", "end");
+//       //.text("Population");
+
+//  var plot_year = svg.selectAll(".plot_year")
+//    .data(years.map(function (y) { return agg_data[y] }))
+//    .enter().append("g")
+//      .attr("class", "g")
+//      .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
+
+//  plot_year.selectAll(".plot_year")
+//    .data(years.map(function (y) { return agg_data[y] }))
+  plot_year.data(years.map(function (y) { return agg_data[y] }))
+//    .enter().append("g")
+      .attr("class", "g")
+      .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
+
+//   plot_year.selectAll("rect")
+//      .data(function(d) {
+//        return d.resolutions;
+//      })
+
+   height_diff = 0;  //height discrepancy when calculating h based on data vs y(d.y0) - y(d.y1)
+   plot_year.selectAll("rect")
+    .data(function(d) {
+      return d.resolutions;
+    })
+    //.enter().append("rect")
+//    .transition()
+//      .attr("width", x.rangeBand())
+    .transition()
+    .duration(750)
+      .attr("y", function(d) {
+        height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
+        y_corrected = y(d.y1) + height_diff;
+        d.y_corrected = y_corrected //store in d for later use in restorePlot()
+
+        if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
+
+        return y_corrected;
+        // return y(d.y1);  //orig, but not accurate
+      })
+      .attr("x",function(d) { //add to stock code
+          return x(d.year)
+        })
+      .attr("height", function(d) {
+        //return y(d.y0) - y(d.y1); //heights calculated based on stacked values (inaccurate)
+        return y(0) - y(d.value); //calculate height directly from value in csv file
+      })
+      .attr("class", function(d) {
+        classLabel = d.type.replace(/\s/g, ''); //remove spaces
+        return "bars class" + classLabel;
+      })
+      .style("fill", function(d) { return color(d.type); });
+
+  plot_year.selectAll("rect")
+       .on("mouseover", function(d){
+
+          var delta = d.y1 - d.y0;
+          var xPos = parseFloat(d3.select(this).attr("x"));
+          var yPos = parseFloat(d3.select(this).attr("y"));
+          var height = parseFloat(d3.select(this).attr("height"))
+
+          d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+
+          svg.append("text")
+          .attr("x",xPos)
+          .attr("y",yPos +height/2)
+          .attr("class","tooltip")
+          .text(d.type +": "+ delta);
+
+       })
+       .on("mouseout",function(){
+          svg.select(".tooltip").remove();
+          d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+
+        })
+
+}
+
+var glob_data = [];
+var plot_year;
+
+d3.csv('https://areas-aleksi.hashbase.io/resolutions.csv', function(error, data) {
   if (error) throw error;
 
+  glob_data = data;
   years = get_years(data);
   agg_data = aggregate_by_type(data);
   //  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
@@ -164,7 +293,7 @@ d3.csv('https://resolution-aleksi.hashbase.io/resolutions.csv', function(error, 
       .style("text-anchor", "end");
       //.text("Population");
 
-  var plot_year = svg.selectAll(".plot_year")
+  plot_year = svg.selectAll(".plot_year")
     .data(years.map(function (y) { return agg_data[y] }))
     .enter().append("g")
       .attr("class", "g")
@@ -387,12 +516,8 @@ d3.csv('https://resolution-aleksi.hashbase.io/resolutions.csv', function(error, 
         .duration(1000)
         .delay(750)
         .attr("y", y_new);
-
     })
-
   }
-
-
 });
 
 /*
@@ -714,5 +839,62 @@ d3.csv("https://test-aleksi.hashbase.io/state_data.csv", function(error, data) {
 
 */
 
-
 </script>
+<br><br>
+<select class="js-example-basic-multiple" multiple="multiple">
+  <option style="font-size: 14px;" value="AL">Alabama</option>
+  <option style="font-size: 14px;" value="WY">Wyoming</option>
+  <option style="font-size: 14px;" value="Afghanistan">Afghanistan</option>
+  <option style="font-size: 14px;" value="Africa">Africa</option>
+  <option style="font-size: 14px;" value="Angola">Angola</option>
+  <option style="font-size: 14px;" value="Burundi">Burundi</option>
+  <option style="font-size: 14px;" value="CAR">CAR</option>
+  <option style="font-size: 14px;" value="Chad">Chad</option>
+  <option style="font-size: 14px;" value="Colombia">Colombia</option>
+  <option style="font-size: 14px;" value="DRC">DRC</option>
+  <option style="font-size: 14px;" value="Eritrea">Eritrea</option>
+  <option style="font-size: 14px;" value="Ethiopia">Ethiopia</option>
+  <option style="font-size: 14px;" value="Georgia">Georgia</option>
+  <option style="font-size: 14px;" value="Global">Global</option>
+  <option style="font-size: 14px;" value="Great Lakes Region">Great Lakes Region</option>
+  <option style="font-size: 14px;" value="Guinea-Bissau">Guinea-Bissau</option>
+  <option style="font-size: 14px;" value="Gulf of Guinea">Gulf of Guinea</option>
+  <option style="font-size: 14px;" value="Haiti">Haiti</option>
+  <option style="font-size: 14px;" value="Iran">Iran</option>
+  <option style="font-size: 14px;" value="Iraq">Iraq</option>
+  <option style="font-size: 14px;" value="Kuwait">Kuwait</option>
+  <option style="font-size: 14px;" value="Syria">Syria</option>
+  <option style="font-size: 14px;" value="Israel">Israel</option>
+  <option style="font-size: 14px;" value="Ivory Coast">Ivory Coast</option>
+  <option style="font-size: 14px;" value="Lebanon">Lebanon</option>
+  <option style="font-size: 14px;" value="Liberia">Liberia</option>
+  <option style="font-size: 14px;" value="Libya">Libya</option>
+  <option style="font-size: 14px;" value="Mali">Mali</option>
+  <option style="font-size: 14px;" value="Middle East">Middle East</option>
+  <option style="font-size: 14px;" value="North Korea">North Korea</option>
+  <option style="font-size: 14px;" value="Republic of Yugoslavia">Republic of Yugoslavia</option>
+  <option style="font-size: 14px;" value="Rwanda">Rwanda</option>
+  <option style="font-size: 14px;" value="Sahel">Sahel</option>
+  <option style="font-size: 14px;" value="Sierra Leone">Sierra Leone</option>
+  <option style="font-size: 14px;" value="Somalia">Somalia</option>
+  <option style="font-size: 14px;" value="Somalia">Somalia</option>
+  <option style="font-size: 14px;" value="Sudan">Sudan</option>
+  <option style="font-size: 14px;" value="South Sudan">South Sudan</option>
+  <option style="font-size: 14px;" value="USA">USA</option>
+  <option style="font-size: 14px;" value="Yemen">Yemen</option>
+</select>
+
+<script>
+$(document).ready(function() {
+  $('.js-example-basic-multiple').select2({'width':'500px'});
+  $('.js-example-basic-multiple').on('change', function (evt) {
+    var vals = $('.js-example-basic-multiple').select2('val');
+    update_data(vals);
+  });
+});
+</script>
+
+<script type="text/javascript" src="areas.js" defer></script>
+
+</body>
+
