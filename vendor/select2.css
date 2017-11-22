@@ -41,7 +41,8 @@
     .select2-container .select2-search--inline .select2-search__field {
       box-sizing: border-box;
       border: none;
-      font-size: 100%;
+      font-size: 14px;
+      font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;
       margin-top: 5px;
       padding: 0; }
       .select2-container .select2-search--inline .select2-search__field::-webkit-search-cancel-button {

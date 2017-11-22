@@ -46,7 +46,6 @@ label {
 
 </style>
 <body>
-  <label><input type="checkbox"> Sort values</label>
 
 <script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
 
@@ -91,15 +90,36 @@ var restoreXFlag = false; //restore order of bars back to original
 
 
 // find range of years in data
-var get_years = function get_years(data) {
+var get_years = function(data) {
   years = data.map(function(x) { return x['Year']; });
   unique_years = years.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
   return unique_years.sort();
 }
 
+var country_is_selected = function(country, selected_countries) {
+  // if no selection, let's display all
+  if(! selected_countries || selected_countries.length === 0) {
+    return true;
+  } else {
+    for(i=0;i<selected_countries.length;i++){
+      if(country == selected_countries[i]) {
+        return true;
+      }
+      // check if country in question is contained by one of the selected areas
+      ca = children_array(selected_countries[i]);
+      if(ca && ca.length > 0) {
+        for(j=0;j<ca.length;j++){
+          if(country == ca[j]) { return true; }
+        }
+      }
+    }
+  }
+  return false;
+}
+
 var get_type_count = function get_type_count(data, year, type, selected_countries) {
   return data.reduce(function(total, element) {
-    if (element['Year'] == year && type in element && ! (selected_countries && ! selected_countries.includes(element.Country))) {
+    if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Country, selected_countries)) {
       return total + parseInt(element[type]);
     } else {
       return total;
@@ -912,25 +932,48 @@ $.fn.select2.amd.require(["optgroup-data", "optgroup-results"], function (Optgro
 </script>
 -->
 
+<div style="clear:both;">
+</div>
 
-   <select multiple='multiple' style="width:200px" id='target'>
-     <optgroup label="Africa">
-     </optgroup>
-     <optgroup label="Asia">
-     </optgroup>
-     <optgroup label="Central America">
-     </optgroup>
-     <optgroup label="Europe">
-     </optgroup>
-     <optgroup label="Middle East">
-     </optgroup>
-     <optgroup label="North America">
-     </optgroup>
-     <optgroup label="South America">
-     </optgroup>
-     <optgroup label="Global">
-     </optgroup>
-   </select>
+<p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+UN security council resolution 2000-2017, categorized by the topic of resolutions.
+</p>
+
+<div style="float: left; margin-right: 70px; margin-top: 10px;">
+
+<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+Select areas to display
+</p>
+
+<select multiple='multiple' style="width:250px" id='target'>
+  <optgroup label="Africa">
+  </optgroup>
+  <optgroup label="Asia">
+  </optgroup>
+  <optgroup label="Central America">
+  </optgroup>
+  <optgroup label="Europe">
+  </optgroup>
+  <optgroup label="Middle East">
+  </optgroup>
+  <optgroup label="North America">
+  </optgroup>
+  <optgroup label="South America">
+  </optgroup>
+  <optgroup label="Global">
+  </optgroup>
+</select>
+
+</div>
+
+<div style="float: left; margin-top: 10px">
+<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+Select resolution types to display
+</p>
+
+<p style="margin-top: 0px; margin-bottom: 40px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+Click on the resolution type in the graph legend to focus on single types.
+</div>
 
 	<script>
 	$(function(){
@@ -940,7 +983,7 @@ $.fn.select2.amd.require(["optgroup-data", "optgroup-results"], function (Optgro
 	            dataAdapter: OptgroupData,
 	            resultsAdapter: OptgroupResults,
 	            closeOnSelect: false,
-				placeholder: "Search"
+				placeholder: "Displaying all - type to search"
 	        });
 	    });
 	});
