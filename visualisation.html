@@ -38,7 +38,6 @@ body {
 }
 
 label {
-  position: absolute;
   top: 222px;
   right: 35px;
   color: #D8D8D8;
@@ -88,7 +87,6 @@ var legendClassArray_orig = []; //orig (with spaces)
 var sortDescending; //if true, bars are sorted by height in descending order
 var restoreXFlag = false; //restore order of bars back to original
 
-
 // find range of years in data
 var get_years = function(data) {
   years = data.map(function(x) { return x['Year']; });
@@ -105,22 +103,40 @@ var country_is_selected = function(country, selected_countries) {
       if(country == selected_countries[i]) {
         return true;
       }
-      // check if country in question is contained by one of the selected areas
-      ca = children_array(selected_countries[i]);
-      if(ca && ca.length > 0) {
-        for(j=0;j<ca.length;j++){
-          if(country == ca[j]) { return true; }
-        }
-      }
+      if(area_is_part_of(country, selected_countries[i])) { return true; }
     }
   }
   return false;
 }
 
-var get_type_count = function get_type_count(data, year, type, selected_countries) {
+var area_is_part_of = function(area1, area2) {
+  // check if country in question is contained by one of the selected areas
+  ca = children_array(area2);
+  if(ca && ca.length > 0) {
+    for(j=0;j<ca.length;j++){
+      if(area1 == ca[j]) { return true; }
+    }
+  }
+  return false;
+}
+
+var get_type_count = function(data, year, type, selected_countries) {
   return data.reduce(function(total, element) {
     if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Country, selected_countries)) {
       return total + parseInt(element[type]);
+    } else {
+      return total;
+    }
+  }, 0);
+}
+
+// var get_resolution_count = function
+var get_area_count = function(data, year, area) {
+  return data.reduce(function(total, element) {
+//    if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Country, selected_countries)) {
+    if (element['Year'] == year && area_is_part_of(element.Country, area)) {
+//      return total + parseInt(element[type]);
+      return total + 1;
     } else {
       return total;
     }
@@ -140,6 +156,20 @@ var aggregate_by_type = function aggregate_by_type(data, selected_countries) {
   return aggregated_data;
 }
 
+var top_regions = ["Africa", "Asia", "Central America", "Europe", "Middle East", "North America", "South America", "Global"];
+var aggregate_by_country = function(data, selected_countries) {
+  years = get_years(data);
+  aggregated_data = {};
+  years.forEach(function(year) {
+    aggregated_data[year] = {};
+    countries = top_regions;
+    countries.forEach(function(country) {
+      aggregated_data[year][country] = get_area_count(data, year, country);
+    });
+  });
+  return aggregated_data;
+}
+
 //disable sort checkbox
 d3.select("label")
   .select("input")
@@ -151,12 +181,14 @@ d3.select("label")
 
 var update_data = function update_data(selected_countries) {
 
-  agg_data = aggregate_by_type(glob_data, selected_countries);
+//xx  agg_data = aggregate_by_type(glob_data, selected_countries);
+  agg_data = aggregate_by_country(glob_data, selected_countries);
 
   // change data into form that can be easily used
   years.forEach(function(year) {
     var y0 = 0;
-    agg_data[year].resolutions = types.map(function(type) {
+//xx    agg_data[year].resolutions = types.map(function(type) {
+    agg_data[year].resolutions = top_regions.map(function(type) {
       return {
         year:year,
         type:type,
@@ -168,7 +200,6 @@ var update_data = function update_data(selected_countries) {
     });
     agg_data[year].total = agg_data[year].resolutions[agg_data[year].resolutions.length - 1].y1;
   });
-
 
   total_vals = years.map(function(y) { return agg_data[y].total });
   y.domain([0, d3.max(total_vals)]);
@@ -277,14 +308,17 @@ d3.csv('https://areas-aleksi.hashbase.io/resolutions.csv', function(error, data)
 
   glob_data = data;
   years = get_years(data);
-  agg_data = aggregate_by_type(data);
+//xx  agg_data = aggregate_by_type(data);
+  agg_data = aggregate_by_country(data);
   //  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
   color.domain(types);
+//  color.domain(top_regions);
 
   // change data into form that can be easily used
   years.forEach(function(year) {
     var y0 = 0;
-    agg_data[year].resolutions = types.map(function(type) {
+//xx    agg_data[year].resolutions = types.map(function(type) {
+    agg_data[year].resolutions = top_regions.map(function(type) {
       return {
         year:year,
         type:type,
@@ -945,6 +979,78 @@ UN security council resolution 2000-2017, categorized by the topic of resolution
 Select areas to display
 </p>
 
+<style>
+.switch-field {
+  font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
+  padding: 40px;
+	overflow: hidden;
+}
+
+.switch-title {
+  margin-bottom: 6px;
+}
+
+.switch-field input {
+    position: absolute !important;
+    clip: rect(0, 0, 0, 0);
+    height: 1px;
+    width: 1px;
+    border: 0;
+    overflow: hidden;
+}
+
+.switch-field label {
+  float: left;
+}
+
+.switch-field label {
+  display: inline-block;
+  width: 60px;
+  background-color: #e4e4e4;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  text-shadow: none;
+  padding: 6px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.1);
+  -webkit-transition: all 0.1s ease-in-out;
+  -moz-transition:    all 0.1s ease-in-out;
+  -ms-transition:     all 0.1s ease-in-out;
+  -o-transition:      all 0.1s ease-in-out;
+  transition:         all 0.1s ease-in-out;
+}
+
+.switch-field label:hover {
+	cursor: pointer;
+}
+
+.switch-field input:checked + label {
+  background-color: #A5DC86;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+.switch-field label:first-of-type {
+  border-radius: 4px 0 0 4px;
+}
+
+.switch-field label:last-of-type {
+  border-radius: 0 4px 4px 0;
+}
+</style>
+
+    <div class="switch-field">
+      <div class="switch-title">Is this awesome?</div>
+      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions" checked/>
+      <label for="switch_left">Mentions</label>
+      <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" />
+      <label for="switch_right">Resolutions</label>
+    </div>
+
+
 <select multiple='multiple' style="width:250px" id='target'>
   <optgroup label="Africa">
   </optgroup>
@@ -996,6 +1102,16 @@ Click on the resolution type in the graph legend to focus on single types.
     vals.forEach(function (e) { selections.push(e.text) });
     update_data(selections);
   });
+
+$('input:radio[name="switch_2"]').change(
+    function(){
+    alert('Change!');
+        if (this.checked && this.value == 'Resolutions') {
+          alert('Resolutions!');
+        }
+    });
+
+
 
 	</script>
 
