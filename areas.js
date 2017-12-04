@@ -193,8 +193,8 @@ function print_tree(node, depth) {
 
 var global_tree;
 
-d3.csv('https://areas-aleksi.hashbase.io/areas.csv', function(error, data) {
-  if (error) throw error;
+//d3.csv('https://areas-aleksi.hashbase.io/areas.csv', function(error, data) {
+var make_area_tree = function(data) {
 
   // root node
   global_tree = new Tree('World');
@@ -241,7 +241,7 @@ d3.csv('https://areas-aleksi.hashbase.io/areas.csv', function(error, data) {
 
   divtarget.append('select')
     .selectAll('optgroup')
-      .data()
+      .data(data)
       .enter()
     .append('optgroup')
       .attr('label',function (d) { return d.key})
@@ -253,4 +253,4 @@ d3.csv('https://areas-aleksi.hashbase.io/areas.csv', function(error, data) {
       .text(function (d) { return d })
 
 
-});
+}
