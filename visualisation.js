@@ -22,6 +22,7 @@ var yAxis = d3.svg.axis()
     .tickFormat(d3.format(".2s"));
 
 var svg = d3.select("body").append("svg")
+    .attr("id", "graph")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
@@ -126,16 +127,23 @@ d3.select("label")
 // d3.csv("https://test-aleksi.hashbase.io/state_data.csv", function(error, data) {
 //   if (error) throw error;
 
-var update_data = function update_data(selected_countries) {
+var update_data = function update_data(selected_countries, units, split_by) {
 
-//xx  agg_data = aggregate_by_type(glob_data, selected_countries);
-  agg_data = aggregate_by_country(glob_data, selected_countries);
+  units = 'resolutions';
+  split_by = 'types';
+
+  if(split_by == 'countries') {
+    agg_data = aggregate_by_country(glob_data, selected_countries);
+    legend = selected_countries;
+  } else {
+    agg_data = aggregate_by_type(glob_data, selected_countries);
+    legend = types;
+  }
 
   // change data into form that can be easily used
   years.forEach(function(year) {
     var y0 = 0;
-//xx    agg_data[year].resolutions = types.map(function(type) {
-    agg_data[year].resolutions = selected_countries.map(function(type) {
+    agg_data[year].resolutions = legend.map(function(type) {
       return {
         year:year,
         type:type,
@@ -177,7 +185,7 @@ var update_data = function update_data(selected_countries) {
         y_corrected = y(d.y1) + height_diff;
         d.y_corrected = y_corrected //store in d for later use in restorePlot()
         //xx if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
-        if (d.type === selected_countries[selected_countries.length-1]) height_diff = 0; //reset for next year
+        if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
         return y_corrected;
         // return y(d.y1);  //orig, but not accurate
       })
@@ -193,7 +201,6 @@ var update_data = function update_data(selected_countries) {
         return "bars class" + classLabel;
       })
       .style("fill", function(d) { return color(d.type); });
-
 
    rects
     .exit()
@@ -216,7 +223,7 @@ var update_data = function update_data(selected_countries) {
         y_corrected = y(d.y1) + height_diff;
         d.y_corrected = y_corrected //store in d for later use in restorePlot()
 //        if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
-        if (d.type === selected_countries[selected_countries.length-1]) height_diff = 0; //reset for next year
+        if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
         return y_corrected;
         // return y(d.y1);  //orig, but not accurate
       })
@@ -256,7 +263,6 @@ var update_data = function update_data(selected_countries) {
           d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
 
         })
-
 }
 
 var glob_data = [];
@@ -269,24 +275,34 @@ queue()
 
 //d3.csv('https://areas-aleksi.hashbase.io/resolutions.csv', function(error, data) {
 //  if (error) throw error;
-function make_chart(error, areas, resolutions) {
+function make_chart(error, areas, resolutions, units, split_by) {
 
   make_area_tree(areas);
 
+  units = 'resolutions';
+  split_by = 'types';
+  selected_countries = top_regions;
+
   glob_data = resolutions;
   data = resolutions;
+  if(split_by == 'countries') {
+    color.domain(top_regions);
+    agg_data = aggregate_by_country(glob_data, selected_countries);
+    legend = selected_countries;
+  } else {
+    color.domain(types);
+    agg_data = aggregate_by_type(glob_data, selected_countries);
+    legend = types;
+  }
+
   years = get_years(data);
-//xx  agg_data = aggregate_by_type(data);
-  agg_data = aggregate_by_country(data);
   //  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
 //  color.domain(types);
-  color.domain(top_regions);
 
   // change data into form that can be easily used
   years.forEach(function(year) {
     var y0 = 0;
-//xx    agg_data[year].resolutions = types.map(function(type) {
-    agg_data[year].resolutions = top_regions.map(function(type) {
+    agg_data[year].resolutions = legend.map(function(type) {
       return {
         year:year,
         type:type,
@@ -336,7 +352,7 @@ function make_chart(error, areas, resolutions) {
         y_corrected = y(d.y1) + height_diff;
         d.y_corrected = y_corrected //store in d for later use in restorePlot()
 
-        if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
+        if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
 
         return y_corrected;
         // return y(d.y1);  //orig, but not accurate
@@ -442,7 +458,6 @@ function make_chart(error, areas, resolutions) {
                 d3.select("#id" + legendClassArray[i])
                   .style("opacity", 1);
             }
-
 
 //            if (d3.select("label").select("input").property("checked")) {
 //              restoreXFlag = true;
