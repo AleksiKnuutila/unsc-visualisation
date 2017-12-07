@@ -197,7 +197,9 @@ var update_data = function update_data(selected_countries) {
     .exit()
     .transition()
     .duration(750)
-    .remove();
+    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
+    .style("opacity", 0);
+//    .remove();
 
    rects.enter()
     .append("rect")
