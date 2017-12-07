@@ -27,7 +27,6 @@ var active_link = "0"; //to control legend selections and hover
 var legendClicked; //to control legend selections
 var legendClassArray = []; //store legend classes to select bars in plotSingle()
 var legendClassArray_orig = []; //orig (with spaces)
-var sortDescending; //if true, bars are sorted by height in descending order
 var restoreXFlag = false; //restore order of bars back to original
 
 // find range of years in data
@@ -134,11 +133,20 @@ var update_data = function update_data(selected_countries, selected_types) {
   if(split_by == 'countries') {
     agg_data = aggregate_by_country(glob_data, selected_countries, selected_types);
     legend = selected_countries;
-    color.domain(selected_countries);
   } else {
     agg_data = aggregate_by_type(glob_data, selected_countries, selected_types);
     legend = selected_types;
   }
+
+  legend_total = {};
+  legend.forEach(function(t) {
+    legend_total[t] = 0;
+    years.forEach(function(year) {
+      legend_total[t] += agg_data[year][t];
+    });
+  });
+  legend.sort(function(a, b) { return legend_total[b] - legend_total[a]; });
+  color.domain(legend);
 
   // change data into form that can be easily used
   years.forEach(function(year) {
@@ -300,19 +308,24 @@ function make_chart(error, areas, resolutions, units, split_by) {
   glob_data = resolutions;
   data = resolutions;
   if(split_by == 'countries') {
-    color.domain(top_regions);
     agg_data = aggregate_by_country(glob_data, selected_countries, selected_types);
     legend = selected_countries;
   } else {
-    color.domain(types);
     agg_data = aggregate_by_type(glob_data, selected_countries, selected_types);
     legend = selected_types;
   }
 
-  years = get_years(data);
-  //  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "State"; }));
-//  color.domain(types);
+  legend_total = {};
+  legend.forEach(function(t) {
+    legend_total[t] = 0;
+    years.forEach(function(year) {
+      legend_total[t] += agg_data[year][t];
+    });
+  });
+  legend.sort(function(a, b) { return legend_total[b] - legend_total[a]; });
+  color.domain(legend);
 
+  years = get_years(data);
   // change data into form that can be easily used
   years.forEach(function(year) {
     var y0 = 0;
@@ -328,7 +341,6 @@ function make_chart(error, areas, resolutions, units, split_by) {
     });
     agg_data[year].total = agg_data[year].resolutions[agg_data[year].resolutions.length - 1].y1;
   });
-
   x.domain(years);
   total_vals = years.map(function(y) { return agg_data[y].total });
   y.domain([0, d3.max(total_vals)]);
