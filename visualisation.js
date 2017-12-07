@@ -170,6 +170,8 @@ var update_data = function update_data(selected_countries) {
    rects
     .transition()
     .duration(750)
+    .attr("width", x.rangeBand()) //restore bar width
+    .style("opacity", 1)
       .attr("y", function(d) {
         height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
         y_corrected = y(d.y1) + height_diff;
@@ -199,6 +201,11 @@ var update_data = function update_data(selected_countries) {
     .duration(750)
     .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
     .style("opacity", 0);
+
+//   rects
+//    .exit()
+//    .transition()
+//    .duration(750)
 //    .remove();
 
    rects.enter()
