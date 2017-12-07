@@ -113,8 +113,8 @@ var aggregate_by_country = function(data, selected_countries) {
   return aggregated_data;
 }
 
-var split_by;
-var units;
+var glob_split_by;
+var glob_units;
 
 //disable sort checkbox
 d3.select("label")
@@ -130,6 +130,7 @@ var update_data = function update_data(selected_countries) {
   if(split_by == 'countries') {
     agg_data = aggregate_by_country(glob_data, selected_countries);
     legend = selected_countries;
+    color.domain(selected_countries);
   } else {
     agg_data = aggregate_by_type(glob_data, selected_countries);
     legend = types;
@@ -235,6 +236,8 @@ var update_data = function update_data(selected_countries) {
       })
       .style("fill", function(d) { return color(d.type); });
 
+      $(".legend").remove()
+      create_legend();
 
   plot_year.selectAll("rect")
        .on("mouseover", function(d){
@@ -399,6 +402,43 @@ function make_chart(error, areas, resolutions, units, split_by) {
 
         })
 
+  create_legend();
+
+  // restore graph after a single selection
+  function restorePlot(d) {
+    //restore graph after a single selection
+    d3.selectAll(".bars:not(.class" + class_keep + ")")
+          .transition()
+          .duration(1000)
+          .delay(function() {
+            if (restoreXFlag) return 3000;
+            else return 750;
+          })
+          .attr("width", x.rangeBand()) //restore bar width
+          .style("opacity", 1);
+
+    //translate bars back up to original y-posn
+    d3.selectAll(".class" + class_keep)
+      .attr("x", function(d) { return x(d.year); })
+      .transition()
+      .duration(1000)
+      .delay(function () {
+        if (restoreXFlag) return 2000; //bars have to be restored to orig posn
+        else return 0;
+      })
+      .attr("y", function(d) {
+        //return y(d.y1); //not exactly correct since not based on raw data value
+        return d.y_corrected;
+      });
+
+    //reset
+    restoreXFlag = false;
+
+  }
+}
+
+var create_legend = function() {
+
   var legend = svg.selectAll(".legend")
       .data(color.domain().slice().reverse())
     .enter().append("g")
@@ -497,37 +537,6 @@ function make_chart(error, areas, resolutions, units, split_by) {
       .style("text-anchor", "end")
       .text(function(d) { return d; });
 
-  // restore graph after a single selection
-  function restorePlot(d) {
-    //restore graph after a single selection
-    d3.selectAll(".bars:not(.class" + class_keep + ")")
-          .transition()
-          .duration(1000)
-          .delay(function() {
-            if (restoreXFlag) return 3000;
-            else return 750;
-          })
-          .attr("width", x.rangeBand()) //restore bar width
-          .style("opacity", 1);
-
-    //translate bars back up to original y-posn
-    d3.selectAll(".class" + class_keep)
-      .attr("x", function(d) { return x(d.year); })
-      .transition()
-      .duration(1000)
-      .delay(function () {
-        if (restoreXFlag) return 2000; //bars have to be restored to orig posn
-        else return 0;
-      })
-      .attr("y", function(d) {
-        //return y(d.y1); //not exactly correct since not based on raw data value
-        return d.y_corrected;
-      });
-
-    //reset
-    restoreXFlag = false;
-
-  }
 }
 
 function switch_view(units, split_by) {
