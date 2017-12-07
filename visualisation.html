@@ -199,6 +199,8 @@ Select areas to display
 }
 </style>
 
+<div id="targetdiv"></div>
+
     <div class="switch-field">
       <div class="switch-title">Is this awesome?</div>
       <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions" checked/>
@@ -262,9 +264,11 @@ Click on the resolution type in the graph legend to focus on single types.
 
 $('input:radio[name="switch_2"]').change(
     function(){
-    alert('Change!');
+        if (this.checked && this.value == 'Mentions') {
+          switch_view('mentions','types');
+        }
         if (this.checked && this.value == 'Resolutions') {
-          alert('Resolutions!');
+          switch_view('resolutions','countries');
         }
     });
 
