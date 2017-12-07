@@ -74,12 +74,13 @@ var get_type_count = function(data, year, type, selected_countries) {
 }
 
 // var get_resolution_count = function
-var get_area_count = function(data, year, area) {
+var get_area_count = function(data, year, area, selected_types) {
   return data.reduce(function(total, element) {
-//    if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Country, selected_countries)) {
     if (element['Year'] == year && (element.Country == area || area_is_part_of(element.Country, area))) {
-//      return total + parseInt(element[type]);
-      return total + 1;
+      for(i=0;i<selected_types.length;i++){
+        if(element[selected_types[i]] > 0) { return total + 1; }
+      }
+      return total;
     } else {
       return total;
     }
@@ -87,12 +88,12 @@ var get_area_count = function(data, year, area) {
 }
 
 var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
-var aggregate_by_type = function aggregate_by_type(data, selected_countries) {
+var aggregate_by_type = function aggregate_by_type(data, selected_countries, selected_types) {
   years = get_years(data);
   aggregated_data = {};
   years.forEach(function(year) {
     aggregated_data[year] = {};
-    types.forEach(function(type) {
+    selected_types.forEach(function(type) {
       aggregated_data[year][type] = get_type_count(data, year, type, selected_countries);
     });
   });
@@ -100,14 +101,14 @@ var aggregate_by_type = function aggregate_by_type(data, selected_countries) {
 }
 
 var top_regions = ["Africa", "Asia", "Central America", "Europe", "Middle East", "North America", "South America", "Global"];
-var aggregate_by_country = function(data, selected_countries) {
+var aggregate_by_country = function(data, selected_countries, selected_types) {
   years = get_years(data);
   aggregated_data = {};
   years.forEach(function(year) {
     aggregated_data[year] = {};
     if(!selected_countries) { countries = top_regions; } else { countries = selected_countries; }
     countries.forEach(function(country) {
-      aggregated_data[year][country] = get_area_count(data, year, country);
+      aggregated_data[year][country] = get_area_count(data, year, country, selected_types);
     });
   });
   return aggregated_data;
@@ -122,18 +123,21 @@ d3.select("label")
   .property("disabled", true)
   .property("checked", false);
 
-var update_data = function update_data(selected_countries) {
+var update_data = function update_data(selected_countries, selected_types) {
 
   split_by = glob_split_by;
   units = glob_units;
 
+  if(selected_countries.length == 0) { selected_countries = top_regions; }
+  if(selected_types.length == 0) { selected_types = types; }
+
   if(split_by == 'countries') {
-    agg_data = aggregate_by_country(glob_data, selected_countries);
+    agg_data = aggregate_by_country(glob_data, selected_countries, selected_types);
     legend = selected_countries;
     color.domain(selected_countries);
   } else {
-    agg_data = aggregate_by_type(glob_data, selected_countries);
-    legend = types;
+    agg_data = aggregate_by_type(glob_data, selected_countries, selected_types);
+    legend = selected_types;
   }
 
   // change data into form that can be easily used
@@ -291,17 +295,18 @@ function make_chart(error, areas, resolutions, units, split_by) {
   if(!units) { units = 'resolutions'; }
   if(!split_by) { split_by = 'types'; }
   selected_countries = top_regions;
+  selected_types = types;
 
   glob_data = resolutions;
   data = resolutions;
   if(split_by == 'countries') {
     color.domain(top_regions);
-    agg_data = aggregate_by_country(glob_data, selected_countries);
+    agg_data = aggregate_by_country(glob_data, selected_countries, selected_types);
     legend = selected_countries;
   } else {
     color.domain(types);
-    agg_data = aggregate_by_type(glob_data, selected_countries);
-    legend = types;
+    agg_data = aggregate_by_type(glob_data, selected_countries, selected_types);
+    legend = selected_types;
   }
 
   years = get_years(data);

@@ -45,6 +45,7 @@ label {
 
 </style>
 <body>
+<div id="targetdiv"></div>
 
 <script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
 
@@ -199,16 +200,6 @@ Select areas to display
 }
 </style>
 
-<div id="targetdiv"></div>
-
-    <div class="switch-field">
-      <div class="switch-title">Is this awesome?</div>
-      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions" checked/>
-      <label for="switch_left">Mentions</label>
-      <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" />
-      <label for="switch_right">Resolutions</label>
-    </div>
-
 
 <select multiple='multiple' style="width:250px" id='target'>
   <optgroup label="Africa">
@@ -229,6 +220,14 @@ Select areas to display
   </optgroup>
 </select>
 
+    <div class="switch-field">
+      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions" checked/>
+      <label for="switch_left">Mentions</label>
+      <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" />
+      <label for="switch_right">Resolutions</label>
+    </div>
+
+
 </div>
 
 <div style="float: left; margin-top: 10px">
@@ -236,8 +235,23 @@ Select areas to display
 Select resolution types to display
 </p>
 
-<p style="margin-top: 0px; margin-bottom: 40px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-Click on the resolution type in the graph legend to focus on single types.
+<select multiple='multiple' style="width:250px" id='target2'>
+<option value="HT">Human Trafficking</option>
+<option value="HS">Human Smuggling</option>
+<option value="DT">Drugs Trafficking</option>
+<option value="AS">Arms Smuggling</option>
+<option value="AT">Arms Trafficking</option>
+<option value="RT">Resource Trafficking</option>
+<option value="WT">Wildlife Trafficking</option>
+<option value="TR">Theft Armed Robbery</option>
+<option value="PI">Piracy</option>
+<option value="GT">Goods Trafficking</option>
+<option value="FC">Financial Crime</option>
+<option value="CC">Cyber Crime</option>
+<option value="TE">Terrorism</option>
+<option value="KN">Kidnapping Abductions</option>
+</select>
+
 </div>
 
 	<script>
@@ -251,16 +265,32 @@ Click on the resolution type in the graph legend to focus on single types.
 				placeholder: "Displaying all - type to search"
 	        });
 	    });
+	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
+	        function (OptgroupData, OptgroupResults) {
+	        $('#target2').select2(
+              {placeholder: "Displaying all - type to search"}
+              );
+	    });
 	});
 
-  $('#target').on('change', function (evt) {
-    // because of select2 bugs, can't use val() here
-    //var vals = $('#target').select2().val();
+  var update_selections = function() {
     var vals = $('#target').select2('data')
-    var selections = []
-    vals.forEach(function (e) { selections.push(e.text) });
-    update_data(selections);
+    var country_selections = []
+    vals.forEach(function (e) { country_selections.push(e.text) });
+    var vals = $('#target2').select2('data')
+    var type_selections = []
+    vals.forEach(function (e) {
+      type_selections.push(e.id)
+    });
+    update_data(country_selections, type_selections);
+  }
+  $('#target').on('change', function (evt) {
+    update_selections();
   });
+  $('#target2').on('change', function (evt) {
+    update_selections();
+  });
+
 
 $('input:radio[name="switch_2"]').change(
     function(){
@@ -272,10 +302,7 @@ $('input:radio[name="switch_2"]').change(
         }
     });
 
-
-
 	</script>
-
 
 </body>
 
