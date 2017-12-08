@@ -111,8 +111,9 @@ var aggregate_by_country = function(data, selected_countries, selected_types) {
   return aggregated_data;
 }
 
-var glob_split_by;
-var glob_units;
+// default view when loading page
+var glob_split_by = 'countries';
+var glob_units = 'resolutions';
 
 //disable sort checkbox
 d3.select("label")
@@ -490,65 +491,6 @@ var create_legend = function() {
             d3.select(this).style("cursor", "pointer");
           } else d3.select(this).style("cursor", "auto");
         }
-      })
-      .on("click",function(d){
-
-        if (active_link === "0") { //nothing selected, turn on this selection
-          d3.select(this)
-            .style("stroke", "black")
-            .style("stroke-width", 2);
-
-            active_link = this.id.split("id").pop();
-            plotSingle(this);
-
-            //gray out the others
-            for (i = 0; i < legendClassArray.length; i++) {
-              if (legendClassArray[i] != active_link) {
-                d3.select("#id" + legendClassArray[i])
-                  .style("opacity", 0.5);
-              } else sortBy = i; //save index for sorting in change()
-            }
-
-            //enable sort checkbox
-            d3.select("label").select("input").property("disabled", false)
-            d3.select("label").style("color", "black")
-            //sort the bars if checkbox is clicked
-            d3.select("input").on("change", change);
-
-        } else { //deactivate
-          if (active_link === this.id.split("id").pop()) {//active square selected; turn it OFF
-            d3.select(this)
-              .style("stroke", "none");
-
-            //restore remaining boxes to normal opacity
-            for (i = 0; i < legendClassArray.length; i++) {
-                d3.select("#id" + legendClassArray[i])
-                  .style("opacity", 1);
-            }
-
-//            if (d3.select("label").select("input").property("checked")) {
-//              restoreXFlag = true;
-//            }
-
-            //disable sort checkbox
-            d3.select("label")
-              .style("color", "#D8D8D8")
-              .select("input")
-              .property("disabled", true)
-              .property("checked", false);
-
-
-            //sort bars back to original positions if necessary
-            //change();
-
-            //y translate selected category bars back to original y posn
-            restorePlot(d);
-
-            active_link = "0"; //reset
-          }
-
-        } //end active_link check
-
       });
 
   legend.append("text")
