@@ -48,9 +48,9 @@ label {
 <div id="targetdiv"></div>
 
 <script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
-
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script src="https://d3js.org/queue.v1.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
 
 <script type="text/javascript" src="areas.js"></script>
 <script type="text/javascript" src="visualisation.js"></script>
@@ -255,7 +255,13 @@ Select resolution types to display
 </div>
 
 	<script>
+  function gs_init() {
+    Tabletop.init( { key: publicSpreadsheetUrl,
+                     callback: load_sheet_data,
+                     simpleSheet: true } )
+  }
 	$(function(){
+      gs_init();
 	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
 	        function (OptgroupData, OptgroupResults) {
 	        $('#target').select2({
@@ -301,7 +307,6 @@ $('input:radio[name="switch_2"]').change(
           switch_view('resolutions','countries');
         }
     });
-
 	</script>
 
 </body>

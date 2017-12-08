@@ -279,14 +279,23 @@ var glob_areas = [];
 var glob_data = [];
 var plot_year;
 
-queue()
-	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/areas.csv')
-	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/resolutions.csv')
-	.await(make_chart);
+//queue()
+//	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/areas.csv')
+//	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/resolutions.csv')
+//	.await(make_chart);
+
+var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1SyjZImXYewbyYDrybBiQ6039_xrfAsxqDFuOd6OG2_k/edit?usp=sharing';
+
+var load_sheet_data = function(data, tabletop) {
+  glob_data = tabletop.sheets('Cleaned Data').elements;
+  areas = tabletop.sheets('Areas').elements;
+  make_chart(areas, glob_data);
+}
+
 
 //d3.csv('https://areas-aleksi.hashbase.io/resolutions.csv', function(error, data) {
 //  if (error) throw error;
-function make_chart(error, areas, resolutions, units, split_by) {
+function make_chart(areas, resolutions, units, split_by) {
 
   if(glob_areas.length == 0) {
     glob_areas = areas;
