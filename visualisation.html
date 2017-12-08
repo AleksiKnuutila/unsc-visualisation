@@ -43,6 +43,15 @@ label {
   color: #D8D8D8;
 }
 
+.roundedbox {
+  background-color: #eee;
+  padding: 20px;
+  margin-top: 10px;
+  margin-right: 20px;
+  text-align: center;
+  border-radius: 15px;
+}
+
 </style>
 <body>
 <div id="targetdiv"></div>
@@ -133,9 +142,11 @@ UN security council resolution 2000-2017, categorized by the topic of resolution
 
 <div style="float: left; margin-right: 70px; margin-top: 10px;">
 
+<div style="roundedbox">
 <p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
 Select areas to display
 </p>
+</div>
 
 <style>
 .switch-field {
@@ -221,13 +232,17 @@ Select areas to display
   </optgroup>
 </select>
 
+<br><br>
+
+<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+Select what is counted in graphs
     <div class="switch-field">
       <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" checked/ />
       <label for="switch_right" style=" width: 80px; ">Resolutions</label>
-      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions">
+      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Policy mentions">
       <label for="switch_left">Mentions</label>
     </div>
-
+</p>
 
 </div>
 

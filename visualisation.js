@@ -62,7 +62,7 @@ var area_is_part_of = function(area1, area2) {
 
 var get_type_count = function(data, year, type, selected_countries) {
   return data.reduce(function(total, element) {
-    if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Country, selected_countries)) {
+    if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Area, selected_countries)) {
       return total + parseInt(element[type]);
     } else {
       return total;
@@ -73,7 +73,7 @@ var get_type_count = function(data, year, type, selected_countries) {
 // var get_resolution_count = function
 var get_area_count = function(data, year, area, selected_types) {
   return data.reduce(function(total, element) {
-    if (element['Year'] == year && (element.Country == area || area_is_part_of(element.Country, area))) {
+    if (element['Year'] == year && (element.Area == area || area_is_part_of(element.Area, area))) {
       for(i=0;i<selected_types.length;i++){
         if(element[selected_types[i]] > 0) { return total + 1; }
       }

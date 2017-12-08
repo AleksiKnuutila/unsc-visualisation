@@ -197,15 +197,15 @@ var global_tree;
 var make_area_tree = function(data) {
 
   // root node
-  global_tree = new Tree('World');
+  global_tree = new Tree('All');
 
-  // These are the areas immediately under World, which are hardcoded as we assume they won't change
+  // These are the areas immediately under All, which are hardcoded as we assume they won't change
   // Global is add as an area separate of other areas (does not contain other areas)
   top_areas = [ 'Africa', 'Asia', 'Central America', 'Europe', 'Middle East', 'North America', 'South America', 'Global' ];
-  top_areas.forEach(function (a) { global_tree.add(a, 'World') });
+  top_areas.forEach(function (a) { global_tree.add(a, 'All') });
 
   data.forEach(function(e) {
-    global_tree.add(e['This'],e['Is Inside This']);
+    global_tree.add(e['Area'],e['Is Inside This Area']);
   });
 
 
