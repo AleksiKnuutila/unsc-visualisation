@@ -8,10 +8,8 @@ var x = d3.scale.ordinal()
 var y = d3.scale.linear()
     .rangeRound([height, 0]);
 
-// var color = d3.scale.ordinal()
-//     .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
 var color = d3.scale.ordinal()
-    .range(['#a6cee3','#1f78b4','#b2df8a','#33a02c','#fb9a99','#e31a1c','#fdbf6f','#ff7f00','#cab2d6','#6a3d9a','#ffff99','#b15928','#BBBBBB','#000000']);
+  .range(['#80b1d3', '#fb8072', '#b3de69', '#d2d6b0', '#bc80bd', '#fccde5', '#ccebc5', '#ffed6f', '#d9d9d9', '#71a285', '#8dd3c7', '#ffffb3', '#bebada', '#fdb462']);
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
@@ -292,9 +290,6 @@ var load_sheet_data = function(data, tabletop) {
   make_chart(areas, glob_data);
 }
 
-
-//d3.csv('https://areas-aleksi.hashbase.io/resolutions.csv', function(error, data) {
-//  if (error) throw error;
 function make_chart(areas, resolutions, units, split_by) {
 
   if(glob_areas.length == 0) {
@@ -310,7 +305,7 @@ function make_chart(areas, resolutions, units, split_by) {
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   if(!units) { units = 'resolutions'; }
-  if(!split_by) { split_by = 'types'; }
+  if(!split_by) { split_by = 'countries'; }
   selected_countries = top_regions;
   selected_types = types;
 
@@ -571,6 +566,6 @@ function switch_view(units, split_by) {
   //make_area_tree(glob_areas);
   glob_units = units;
   glob_split_by = split_by;
-  make_chart('', glob_areas, glob_data, units, split_by);
+  make_chart(glob_areas, glob_data, units, split_by);
 }
 
