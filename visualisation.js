@@ -307,8 +307,8 @@ function make_chart(areas, resolutions, units, split_by) {
 
   if(!units) { units = 'resolutions'; }
   if(!split_by) { split_by = 'countries'; }
-  selected_countries = top_regions;
-  selected_types = types;
+  selected_countries = get_selected_countries();
+  selected_types = get_selected_types();
 
   glob_data = resolutions;
   data = resolutions;

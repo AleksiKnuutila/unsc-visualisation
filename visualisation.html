@@ -221,21 +221,33 @@ UN security council resolution 2000-2017, categorized by the topic of resolution
 	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
 	        function (OptgroupData, OptgroupResults) {
 	        $('#target2').select2(
-              {placeholder: "Displaying all - type to search"}
+              {
+                placeholder: "Displaying all - type to search",
+  	            closeOnSelect: false,
+              }
               );
 	    });
 	});
 
+var get_selected_countries = function() {
+  var vals = $('#target').select2('data')
+  var country_selections = []
+  vals.forEach(function (e) { country_selections.push(e.text) });
+  if(country_selections.length == 0) { return top_regions; }
+  return country_selections;
+}
+var get_selected_types = function() {
+  var vals = $('#target2').select2('data')
+  var type_selections = []
+  vals.forEach(function (e) {
+    type_selections.push(e.id)
+  });
+  if(type_selections.length == 0) { return types; }
+  return type_selections;
+}
+
   var update_selections = function() {
-    var vals = $('#target').select2('data')
-    var country_selections = []
-    vals.forEach(function (e) { country_selections.push(e.text) });
-    var vals = $('#target2').select2('data')
-    var type_selections = []
-    vals.forEach(function (e) {
-      type_selections.push(e.id)
-    });
-    update_data(country_selections, type_selections);
+    update_data(get_selected_countries(), get_selected_types());
   }
   $('#target').on('change', function (evt) {
     update_selections();
