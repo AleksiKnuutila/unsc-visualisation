@@ -43,115 +43,18 @@ label {
   color: #D8D8D8;
 }
 
-.roundedbox {
+.roundbox {
   background-color: #eee;
   padding: 20px;
-  margin-top: 10px;
   margin-right: 20px;
   text-align: center;
   border-radius: 15px;
+  display: inline-block;
 }
 
-</style>
-<body>
-<div id="targetdiv"></div>
 
-<script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d3js.org/queue.v1.min.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
-
-<script type="text/javascript" src="areas.js"></script>
-<script type="text/javascript" src="visualisation.js"></script>
-
-<!--
-
-<br><br>
-<select id="target" class="js-example-basic-multiple" multiple="multiple">
-  <optgroup label="America">
-  <option style="font-size: 14px;" value="AL">Alabama</option>
-  <option style="font-size: 14px;" value="WY">Wyoming</option>
-  </optgroup>
-  <option style="font-size: 14px;" value="Afghanistan">Afghanistan</option>
-  <option style="font-size: 14px;" value="Africa">Africa</option>
-  <option style="font-size: 14px;" value="Angola">Angola</option>
-  <option style="font-size: 14px;" value="Burundi">Burundi</option>
-  <option style="font-size: 14px;" value="CAR">CAR</option>
-  <option style="font-size: 14px;" value="Chad">Chad</option>
-  <option style="font-size: 14px;" value="Colombia">Colombia</option>
-  <option style="font-size: 14px;" value="DRC">DRC</option>
-  <option style="font-size: 14px;" value="Eritrea">Eritrea</option>
-  <option style="font-size: 14px;" value="Ethiopia">Ethiopia</option>
-  <option style="font-size: 14px;" value="Georgia">Georgia</option>
-  <option style="font-size: 14px;" value="Global">Global</option>
-  <option style="font-size: 14px;" value="Great Lakes Region">Great Lakes Region</option>
-  <option style="font-size: 14px;" value="Guinea-Bissau">Guinea-Bissau</option>
-  <option style="font-size: 14px;" value="Gulf of Guinea">Gulf of Guinea</option>
-  <option style="font-size: 14px;" value="Haiti">Haiti</option>
-  <option style="font-size: 14px;" value="Iran">Iran</option>
-  <option style="font-size: 14px;" value="Iraq">Iraq</option>
-  <option style="font-size: 14px;" value="Kuwait">Kuwait</option>
-  <option style="font-size: 14px;" value="Syria">Syria</option>
-  <option style="font-size: 14px;" value="Israel">Israel</option>
-  <option style="font-size: 14px;" value="Ivory Coast">Ivory Coast</option>
-  <option style="font-size: 14px;" value="Lebanon">Lebanon</option>
-  <option style="font-size: 14px;" value="Liberia">Liberia</option>
-  <option style="font-size: 14px;" value="Libya">Libya</option>
-  <option style="font-size: 14px;" value="Mali">Mali</option>
-  <option style="font-size: 14px;" value="Middle East">Middle East</option>
-  <option style="font-size: 14px;" value="North Korea">North Korea</option>
-  <option style="font-size: 14px;" value="Republic of Yugoslavia">Republic of Yugoslavia</option>
-  <option style="font-size: 14px;" value="Rwanda">Rwanda</option>
-  <option style="font-size: 14px;" value="Sahel">Sahel</option>
-  <option style="font-size: 14px;" value="Sierra Leone">Sierra Leone</option>
-  <option style="font-size: 14px;" value="Somalia">Somalia</option>
-  <option style="font-size: 14px;" value="Somalia">Somalia</option>
-  <option style="font-size: 14px;" value="Sudan">Sudan</option>
-  <option style="font-size: 14px;" value="South Sudan">South Sudan</option>
-  <option style="font-size: 14px;" value="USA">USA</option>
-  <option style="font-size: 14px;" value="Yemen">Yemen</option>
-</select>
-
-<script>
-$(document).ready(function() {
-// Retrieve the adapters!
-$.fn.select2.amd.require(["optgroup-data", "optgroup-results"], function (OptgroupData, OptgroupResults) {
-
-// Construct!
-    $('#target').select2({'width':'500px',
-        dataAdapter: OptgroupData,
-        resultsAdapter: OptgroupResults
-    });
-
-});
-
-  $('#target').on('change', function (evt) {
-    var vals = $('.js-example-basic-multiple').select2('val');
-    update_data(vals);
-  });
-});
-</script>
--->
-
-<div style="clear:both;">
-</div>
-
-<p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-UN security council resolution 2000-2017, categorized by the topic of resolutions.
-</p>
-
-<div style="float: left; margin-right: 70px; margin-top: 10px;">
-
-<div style="roundedbox">
-<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-Select areas to display
-</p>
-</div>
-
-<style>
 .switch-field {
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
-  padding: 40px;
 	overflow: hidden;
 }
 
@@ -211,63 +114,91 @@ Select areas to display
 }
 </style>
 
+<body>
+<div id="targetdiv"></div>
 
-<select multiple='multiple' style="width:250px" id='target'>
-  <optgroup label="Africa">
-  </optgroup>
-  <optgroup label="Asia">
-  </optgroup>
-  <optgroup label="Central America">
-  </optgroup>
-  <optgroup label="Europe">
-  </optgroup>
-  <optgroup label="Middle East">
-  </optgroup>
-  <optgroup label="North America">
-  </optgroup>
-  <optgroup label="South America">
-  </optgroup>
-  <optgroup label="Global">
-    <option value="Global">Global resolutions</option>
-  </optgroup>
-</select>
+<script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/queue.v1.min.js"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
 
-<br><br>
+<script type="text/javascript" src="areas.js"></script>
+<script type="text/javascript" src="visualisation.js"></script>
 
-<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-Select what is counted in graphs
-    <div class="switch-field">
-      <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" checked/ />
-      <label for="switch_right" style=" width: 80px; ">Resolutions</label>
-      <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Policy mentions">
-      <label for="switch_left">Mentions</label>
-    </div>
+<div style="clear:both;"></div>
+
+<p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+UN security council resolution 2000-2017, categorized by the topic of resolutions.
 </p>
 
-</div>
+<div class="roundbox" style="margin-right: 70px;">
 
-<div style="float: left; margin-top: 10px">
-<p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-Select resolution types to display
-</p>
+  <div style="float: left; margin-right: 40px; margin-bottom: 30px;">
 
-<select multiple='multiple' style="width:250px" id='target2'>
-<option value="HT">Human Trafficking</option>
-<option value="HS">Human Smuggling</option>
-<option value="DT">Drugs Trafficking</option>
-<option value="AS">Arms Smuggling</option>
-<option value="AT">Arms Trafficking</option>
-<option value="RT">Resource Trafficking</option>
-<option value="WT">Wildlife Trafficking</option>
-<option value="TR">Theft Armed Robbery</option>
-<option value="PI">Piracy</option>
-<option value="GT">Goods Trafficking</option>
-<option value="FC">Financial Crime</option>
-<option value="CC">Cyber Crime</option>
-<option value="TE">Terrorism</option>
-<option value="KN">Kidnapping Abductions</option>
-</select>
+    <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+    Select areas to display
+    </p>
 
+    <select multiple='multiple' style="width:250px" id='target'>
+      <optgroup label="Africa">
+      </optgroup>
+      <optgroup label="Asia">
+      </optgroup>
+      <optgroup label="Central America">
+      </optgroup>
+      <optgroup label="Europe">
+      </optgroup>
+      <optgroup label="Middle East">
+      </optgroup>
+      <optgroup label="North America">
+      </optgroup>
+      <optgroup label="South America">
+      </optgroup>
+      <optgroup label="Global">
+        <option value="Global">Global resolutions</option>
+      </optgroup>
+    </select>
+
+  </div>
+
+  <div style="float: left; text-align: left; margin-bottom: 30px;margin-right: 40px;">
+
+     <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+     Select resolution types to display
+     </p>
+
+     <select multiple='multiple' style="width:250px" id='target2'>
+     <option value="HT">Human Trafficking</option>
+     <option value="HS">Human Smuggling</option>
+     <option value="DT">Drugs Trafficking</option>
+     <option value="AS">Arms Smuggling</option>
+     <option value="AT">Arms Trafficking</option>
+     <option value="RT">Resource Trafficking</option>
+     <option value="WT">Wildlife Trafficking</option>
+     <option value="TR">Theft Armed Robbery</option>
+     <option value="PI">Piracy</option>
+     <option value="GT">Goods Trafficking</option>
+     <option value="FC">Financial Crime</option>
+     <option value="CC">Cyber Crime</option>
+     <option value="TE">Terrorism</option>
+     <option value="KN">Kidnapping Abductions</option>
+     </select>
+
+  </div>
+
+  <div style="float: left;">
+
+    <p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+    Select what is counted in graphs
+        <div class="switch-field">
+          <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" checked/ />
+          <label for="switch_right" style=" width: 80px; ">Resolutions</label>
+          <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions">
+          <label for="switch_left">Mentions</label>
+        </div>
+    </p>
+
+  </div>
 </div>
 
 	<script>
@@ -326,5 +257,3 @@ $('input:radio[name="switch_2"]').change(
 	</script>
 
 </body>
-
-
