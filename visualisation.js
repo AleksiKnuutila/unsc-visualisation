@@ -17,7 +17,7 @@ var xAxis = d3.svg.axis()
 var yAxis = d3.svg.axis()
     .scale(y)
     .orient("left")
-    .tickFormat(d3.format(".2s"));
+    .tickFormat(d3.format("d"));
 
 var svg;
 
@@ -355,6 +355,12 @@ function make_chart(areas, resolutions, units, split_by) {
       .attr("transform", "translate(0," + height + ")")
       .call(xAxis);
 
+  if(split_by == 'countries') {
+    var y_text = 'Resolutions';
+  } else {
+    var y_text = 'Mentions';
+  }
+
   svg.append("g")
       .attr("class", "y axis")
       .call(yAxis)
@@ -362,8 +368,8 @@ function make_chart(areas, resolutions, units, split_by) {
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "end");
-      //.text("Population");
+      .style("text-anchor", "end")
+      .text(y_text);
 
   plot_year = svg.selectAll(".plot_year")
     .data(years.map(function (y) { return agg_data[y] }))
