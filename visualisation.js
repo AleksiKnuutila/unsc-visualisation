@@ -270,7 +270,6 @@ var update_data = function update_data(selected_countries, selected_types) {
        .on("mouseout",function(){
           svg.select(".tooltip").remove();
           d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
-
         })
 }
 
