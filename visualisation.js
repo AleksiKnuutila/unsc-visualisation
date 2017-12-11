@@ -3,7 +3,7 @@ var margin = {top: 20, right: 20, bottom: 30, left: 40},
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width-50], .1);
+    .rangeRoundBands([0, width-125], .1);
 
 var y = d3.scale.linear()
     .rangeRound([height, 0]);
@@ -290,6 +290,30 @@ var load_sheet_data = function(data, tabletop) {
   make_chart(areas, glob_data);
 }
 
+var type_code_to_legend = function(type) {
+  dict = {
+    'HT': 'Human Trafficking',
+    'HS': 'Human Smuggling',
+    'DT': 'Drugs Trafficking',
+    'AS': 'Arms Smuggling',
+    'AT': 'Arms Trafficking',
+    'RT': 'Resource Trafficking',
+    'WT': 'Wildlife Trafficking',
+    'TR': 'Theft Armed Robbery',
+    'PI': 'Piracy',
+    'GT': 'Goods Trafficking',
+    'FC': 'Financial Crime',
+    'CC': 'Cyber Crime',
+    'TE': 'Terrorism',
+    'KN': 'Kidnapping Abductions',
+  }
+  if(type in dict) {
+    return dict[type];
+  } else {
+    return type;
+  }
+}
+
 function make_chart(areas, resolutions, units, split_by) {
 
   if(glob_areas.length == 0) {
@@ -503,7 +527,9 @@ var create_legend = function() {
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d; });
+      .text(function(d) {
+        return type_code_to_legend(d);
+      });
 
 }
 
