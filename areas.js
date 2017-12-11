@@ -185,9 +185,17 @@ function immediate_children(node) {
   return children;
 }
 
+var show_in_menu = function(region, data) {
+  for(i=0;i<data.length;i++){
+    if(data[i].Area == region && data[i]['Show in menu?'] == 'FALSE') {
+      return false;
+    }
+  }
+  return true;
+}
+
 var global_tree;
 
-//d3.csv('https://areas-aleksi.hashbase.io/areas.csv', function(error, data) {
 var make_area_tree = function(data) {
 
   // root node
@@ -211,7 +219,9 @@ var make_area_tree = function(data) {
     //optgroup = $('select optgroup[label="'+a+'"]');
     children = children_array(a);
     children.forEach(function (c) {
-      optgroup.append('<option value="'+c+'">'+c+'</option>');
+      if(show_in_menu(c, data)) {
+        optgroup.append('<option value="'+c+'">'+c+'</option>');
+      }
     });
   });
   global = $('select optgroup[label="Global"]');
