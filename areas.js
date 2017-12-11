@@ -213,6 +213,7 @@ var make_area_tree = function(data) {
   top_areas = immediate_children('All');
   target= $('#target');
 
+  added_areas = [];
   top_areas.forEach(function (a) {
     var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
     target.append(optgroup);
@@ -220,7 +221,10 @@ var make_area_tree = function(data) {
     children = children_array(a);
     children.forEach(function (c) {
       if(show_in_menu(c, data)) {
-        optgroup.append('<option value="'+c+'">'+c+'</option>');
+        if(!added_areas.includes(c)) {
+          added_areas.push(c);
+          optgroup.append('<option value="'+c+'">'+c+'</option>');
+        }
       }
     });
   });

@@ -43,6 +43,7 @@ var country_is_selected = function(country, selected_countries) {
       if(country == selected_countries[i]) {
         return true;
       }
+//      if(area_is_part_of(country, selected_countries[i]) || area_is_parent_of(country, selected_countries[i]) ) { return true; }
       if(area_is_part_of(country, selected_countries[i])) { return true; }
     }
   }
@@ -55,6 +56,17 @@ var area_is_part_of = function(area1, area2) {
   if(ca && ca.length > 0) {
     for(j=0;j<ca.length;j++){
       if(area1 == ca[j]) { return true; }
+    }
+  }
+  return false;
+}
+
+var area_is_parent_of = function(area1, area2) {
+  // check if country in question is contained by one of the selected areas
+  ca = children_array(area1);
+  if(ca && ca.length > 0) {
+    for(j=0;j<ca.length;j++){
+      if(area2 == ca[j]) { return true; }
     }
   }
   return false;
@@ -122,6 +134,8 @@ d3.select("label")
   .property("checked", false);
 
 var update_data = function update_data(selected_countries, selected_types) {
+
+  country_is_selected("Israel & Palestine",["Israel"]);
 
   split_by = glob_split_by;
   units = glob_units;
