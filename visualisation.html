@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <head>
-<script src="vendor/jquery-2.1.0.js"></script>
-<script src="vendor/jquery.mousewheel.js"></script>
-<link href="vendor/select2.css" rel="stylesheet" />
-<script src="vendor/select2.js"></script>
-<script src="vendor/select2.optgroupSelect.js"></script>
-<link rel="stylesheet" type="text/css" href="vendor/select2.optgroupSelect.css">
+  <script src="vendor/jquery-2.1.0.js"></script>
+  <script src="vendor/jquery.mousewheel.js"></script>
+  <link href="vendor/select2.css" rel="stylesheet" />
+  <script src="vendor/select2.js"></script>
+  <script src="vendor/select2.optgroupSelect.js"></script>
+  <link rel="stylesheet" type="text/css" href="vendor/select2.optgroupSelect.css">
 </head>
 <meta charset="utf-8">
 <style>
@@ -56,7 +56,7 @@ label {
 
 .switch-field {
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
-	overflow: hidden;
+  overflow: hidden;
 }
 
 .switch-title {
@@ -64,12 +64,12 @@ label {
 }
 
 .switch-field input {
-    position: absolute !important;
-    clip: rect(0, 0, 0, 0);
-    height: 1px;
-    width: 1px;
-    border: 0;
-    overflow: hidden;
+  position: absolute !important;
+  clip: rect(0, 0, 0, 0);
+  height: 1px;
+  width: 1px;
+  border: 0;
+  overflow: hidden;
 }
 
 .switch-field label {
@@ -97,22 +97,22 @@ label {
 }
 
 .button {
-    display: inline-block;
-    width: 60px;
-    background-color: #e4e4e4;
-    color: rgba(0, 0, 0, 0.6);
-    font-size: 14px;
-    font-weight: normal;
-    text-align: center;
-    text-shadow: none;
-    padding: 6px 14px;
-    margin-top: 2px;
-    margin-bottom: auto;
-    vertical-align: sub;
+  display: inline-block;
+  width: 60px;
+  background-color: #e4e4e4;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 14px;
+  font-weight: normal;
+  text-align: center;
+  text-shadow: none;
+  padding: 6px 14px;
+  margin-top: 2px;
+  margin-bottom: auto;
+  vertical-align: sub;
 }
 
 .switch-field label:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .switch-field input:checked + label {
@@ -128,131 +128,152 @@ label {
 .switch-field label:last-of-type {
   border-radius: 0 4px 4px 0;
 }
+
+#loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 100px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.select2-search__field {
+  width: 250px !important;
+}
+
 </style>
 
 <body>
-<div id="targetdiv"></div>
 
-<script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://d3js.org/queue.v1.min.js"></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
+  <div id="loader"></div>
 
-<script type="text/javascript" src="areas.js"></script>
-<script type="text/javascript" src="visualisation.js"></script>
+  <div id="loadedcontent" style="display: none;">
+    <div id="targetdiv"></div>
 
-<div style="clear:both;"></div>
+    <script type="text/javascript" src="vendor/iframeResizer.contentWindow.min.js" defer></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/queue.v1.min.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/tabletop.js/1.5.1/tabletop.min.js'></script>
 
-<!--
+    <script type="text/javascript" src="areas.js"></script>
+    <script type="text/javascript" src="visualisation.js"></script>
 
-<p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-UN security council resolution 2000-2017, categorized by the topic of resolutions.
-</p>
+    <div style="clear:both;"></div>
 
--->
 
-<div class="roundbox" style="margin-right: 70px;">
+    <!--
 
-  <div style="float: left; margin-right: 40px; margin-bottom: 30px;">
+      <p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+      UN security council resolution 2000-2017, categorized by the topic of resolutions.
+      </p>
 
-    <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-    Select areas to display
-    </p>
+    -->
 
-    <select multiple='multiple' style="width:250px" id='target'>
-      <!--
-      <optgroup label="Africa"></optgroup>
-      <optgroup label="Asia">
-      </optgroup>
-      <optgroup label="Central America">
-      </optgroup>
-      <optgroup label="Europe">
-      </optgroup>
-      <optgroup label="Middle East">
-      </optgroup>
-      <optgroup label="North America">
-      </optgroup>
-      <optgroup label="South America">
-      </optgroup>
-      <optgroup label="Global">
-        <option value="Global">Global resolutions</option>
-      </optgroup>
-      -->
-    </select>
+    <div class="roundbox" style="margin-right: 70px;">
 
-    <input type="button" class="button" onclick="$('#target').select2('val',null)" value="Clear">
+      <div style="float: left; margin-right: 40px; margin-bottom: 30px;">
 
-  </div>
+        <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+        Select areas to display
+        </p>
 
-  <div style="float: left; text-align: left; margin-bottom: 30px;margin-right: 40px;">
+        <select multiple='multiple' style="width:250px" id='target'>
+          <!--
+            <optgroup label="Africa"></optgroup>
+            <optgroup label="Asia">
+            </optgroup>
+            <optgroup label="Central America">
+            </optgroup>
+            <optgroup label="Europe">
+            </optgroup>
+            <optgroup label="Middle East">
+            </optgroup>
+            <optgroup label="North America">
+            </optgroup>
+            <optgroup label="South America">
+            </optgroup>
+            <optgroup label="Global">
+            <option value="Global">Global resolutions</option>
+            </optgroup>
+          -->
+        </select>
 
-     <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-     Select resolution types to display
-     </p>
+        <input type="button" class="button" onclick="$('#target').select2('val',null)" value="Clear">
 
-     <select multiple='multiple' style="width:250px" id='target2'>
-     <option value="HT">Human Trafficking</option>
-     <option value="HS">Human Smuggling</option>
-     <option value="DT">Drugs Trafficking</option>
-     <option value="AS">Arms Smuggling</option>
-     <option value="AT">Arms Trafficking</option>
-     <option value="RT">Resource Trafficking</option>
-     <option value="WT">Wildlife Trafficking</option>
-     <option value="TR">Theft Armed Robbery</option>
-     <option value="PI">Piracy</option>
-     <option value="GT">Goods Trafficking</option>
-     <option value="FC">Financial Crime</option>
-     <option value="CC">Cyber Crime</option>
-     <option value="TE">Terrorism</option>
-     <option value="KN">Kidnapping Abductions</option>
-     </select>
+      </div>
 
-    <input type="button" class="button" onclick="$('#target2').select2('val',null)" value="Clear">
+      <div style="float: left; text-align: left; margin-bottom: 30px;margin-right: 40px;">
 
-  </div>
+        <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+        Select resolution types to display
+        </p>
 
-  <div style="float: left;">
+        <select multiple='multiple' style="width:250px" id='target2'>
+          <option value="HT">Human Trafficking</option>
+          <option value="HS">Human Smuggling</option>
+          <option value="DT">Drugs Trafficking</option>
+          <option value="AS">Arms Smuggling</option>
+          <option value="AT">Arms Trafficking</option>
+          <option value="RT">Resource Trafficking</option>
+          <option value="WT">Wildlife Trafficking</option>
+          <option value="TR">Theft Armed Robbery</option>
+          <option value="PI">Piracy</option>
+          <option value="GT">Goods Trafficking</option>
+          <option value="FC">Financial Crime</option>
+          <option value="CC">Cyber Crime</option>
+          <option value="TE">Terrorism</option>
+          <option value="KN">Kidnapping Abductions</option>
+        </select>
 
-    <p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-    Select what is counted in graphs
+        <input type="button" class="button" onclick="$('#target2').select2('val',null)" value="Clear">
+
+      </div>
+
+      <div style="float: left;">
+
+        <p style="margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
+        Select what is counted in graphs
         <div class="switch-field">
           <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" checked/ />
           <label for="switch_right" style=" width: 80px; ">Resolutions</label>
           <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions">
           <label for="switch_left">Mentions</label>
         </div>
-    </p>
+        </p>
 
+      </div>
+    </div>
   </div>
-</div>
 
 	<script>
-  function gs_init() {
-    Tabletop.init( { key: publicSpreadsheetUrl,
-                     callback: load_sheet_data,
-                     simpleSheet: true } )
-  }
-	$(function(){
-      gs_init();
-	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
-	        function (OptgroupData, OptgroupResults) {
-	        $('#target').select2({
-	            dataAdapter: OptgroupData,
-	            resultsAdapter: OptgroupResults,
-	            closeOnSelect: false,
-				placeholder: "Displaying all - type to search"
-	        });
-	    });
-	    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
-	        function (OptgroupData, OptgroupResults) {
-	        $('#target2').select2(
-              {
-                placeholder: "Displaying all - type to search",
-  	            closeOnSelect: false,
-              }
-              );
-	    });
-	});
+$(function(){
+  Tabletop.init( { key: publicSpreadsheetUrl,
+    callback: load_sheet_data,
+    simpleSheet: true } )
+    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
+        function (OptgroupData, OptgroupResults) {
+          $('#target').select2({
+            dataAdapter: OptgroupData,
+            resultsAdapter: OptgroupResults,
+            closeOnSelect: false,
+            placeholder: "Displaying all - type to search"
+          });
+        });
+  $('#target2').select2(
+      {
+        placeholder: "Displaying all - type to search",
+        closeOnSelect: false,
+      });
+});
 
 var get_selected_countries = function() {
   var vals = $('#target').select2('data')

@@ -285,6 +285,8 @@ var plot_year;
 var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1SyjZImXYewbyYDrybBiQ6039_xrfAsxqDFuOd6OG2_k/edit?usp=sharing';
 
 var load_sheet_data = function(data, tabletop) {
+  $("#loader").fadeOut(400);
+  $("#loadedcontent").fadeIn(400);
   glob_data = tabletop.sheets('Cleaned Data').elements;
   areas = tabletop.sheets('Areas').elements;
   make_chart(areas, glob_data);
