@@ -176,19 +176,13 @@ function children_array(node) {
   return children;
 }
 
-function print_tree(node, depth) {
-//  console.log(node.data)
-
-  var depth_string = '';
-  for(i=0;i<depth;i++) {
-    depth_string = depth_string + '--'
-  }
-
-  if (node.children.length > 0) {
-    console.log(depth_string + ' ' + node.data + " contains " + node.children.length + " areas");
-  } else {
-    console.log(depth_string + ' ' + node.data)
-  }
+function immediate_children(node) {
+  var children = [];
+  var parent = global_tree.find(node);
+  parent.children.forEach(function (c) {
+      children.push(c.data);
+  });
+  return children;
 }
 
 var global_tree;
@@ -201,56 +195,27 @@ var make_area_tree = function(data) {
 
   // These are the areas immediately under All, which are hardcoded as we assume they won't change
   // Global is add as an area separate of other areas (does not contain other areas)
-  top_areas = [ 'Africa', 'Asia', 'Central America', 'Europe', 'Middle East', 'North America', 'South America', 'Global' ];
-  top_areas.forEach(function (a) { global_tree.add(a, 'All') });
+//  top_areas = [ 'Africa', 'Asia', 'Central America', 'Europe', 'Middle East', 'North America', 'South America', 'Global' ];
+//  top_areas.forEach(function (a) { global_tree.add(a, 'All') });
 
   data.forEach(function(e) {
     global_tree.add(e['Area'],e['Is Inside This Area']);
   });
 
+  top_areas = immediate_children('All');
+  target= $('#target');
 
   top_areas.forEach(function (a) {
-    optgroup = $('select optgroup[label="'+a+'"]')
+    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
+    target.append(optgroup);
+    //optgroup = $('select optgroup[label="'+a+'"]');
     children = children_array(a);
     children.forEach(function (c) {
       optgroup.append('<option value="'+c+'">'+c+'</option>');
     });
   });
-
-  /*
-    <select multiple='multiple' style="width:200px" id='target'>
-        <optgroup label="Africa">
-            <option value='Afghanistan'>Afghanistan</option>
-            <option value='Sudan'>Sudan</option>
-			<option value='9'>Bed Stuy</option>
-        </optgroup>
-        <optgroup label="All Manhattan">
-            <option value='3'>Flatiron</option>
-            <option value='4'>Upper West Side</option>
-			<option value='10'>Manhattanville</option>
-        </optgroup>
-        <optgroup label="All Queens">
-            <option value='5'>Long Island City</option>
-            <option value='6'>Astoria</option>
-        </optgroup>
-    </select>
-	<script>
-   */
-
-  var divtarget = d3.select('#divtarget')
-
-  divtarget.append('select')
-    .selectAll('optgroup')
-      .data(data)
-      .enter()
-    .append('optgroup')
-      .attr('label',function (d) { return d.key})
-    .selectAll('option')
-      .data(function (d) { return d.value })
-      .enter()
-    .append('option')
-      .attr('value',function (d) { return d })
-      .text(function (d) { return d })
-
-
+  global = $('select optgroup[label="Global"]');
+  if(global) {
+    global.append('<option value="Global">Global resolutions</option>');
+  }
 }
