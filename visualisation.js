@@ -205,6 +205,14 @@ var update_data = function update_data(selected_countries, selected_types) {
       return d.resolutions;
     })
 
+   rects
+    .exit()
+    .transition()
+    .duration(750)
+    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
+    .attr("y", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
+    .style("opacity", 0);
+
    //   update here?
    rects
     .transition()
@@ -232,13 +240,6 @@ var update_data = function update_data(selected_countries, selected_types) {
         return "bars class" + classLabel;
       })
       .style("fill", function(d) { return color(d.type); });
-
-   rects
-    .exit()
-    .transition()
-    .duration(750)
-    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
-    .style("opacity", 0);
 
 //   rects
 //    .exit()
