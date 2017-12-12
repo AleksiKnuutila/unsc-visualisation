@@ -9,7 +9,7 @@ var y = d3.scale.linear()
     .rangeRound([height, 0]);
 
 var color = d3.scale.ordinal()
-  .range(['#80b1d3', '#fb8072', '#b3de69', '#d2d6b0', '#bc80bd', '#fccde5', '#ccebc5', '#ffed6f', '#d9d9d9', '#71a285', '#8dd3c7', '#ffffb3', '#bebada', '#fdb462']);
+  .range(['#80b1d3', '#fb8072', '#b3de69', '#8dd3c7', '#71a285', '#fccde5', '#d9d9d9', '#ffed6f', '#bc80bd', '#bebada', '#ffffb3', '#d2d6b0', '#ccebc5', '#fdb462']);
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
@@ -237,7 +237,8 @@ var update_data = function update_data(selected_countries, selected_types) {
     .exit()
     .transition()
     .duration(750)
-    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
+//    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
+    .attr("height", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
     .style("opacity", 0);
 
 //   rects
