@@ -14,13 +14,23 @@ body {
   font: 10px sans-serif;
 }
 
-.topregion {
+.region_l1 {
   font-weight: bold;
 }
 
-.smallregion {
+.region_l2 {
   margin-left: 1em;
 }
+
+.region_l3 {
+  margin-left: 2em;
+}
+
+.region_l4 {
+  margin-left: 3em;
+}
+
+
 
 .axis path,
 .axis line {
@@ -367,6 +377,7 @@ $('#target').on("select2:select", function(event) {
   // update old_values for future use
   old_values = new_values;
   update_selections();
+  global_tree.contains(print_tree, Tree.prototype.traverse_with_depth)
 });
 $('#target').on("select2:unselect", function(event) {
   vals = $('#target').val();

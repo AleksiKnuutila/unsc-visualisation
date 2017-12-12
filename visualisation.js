@@ -135,8 +135,6 @@ d3.select("label")
 
 var update_data = function update_data(selected_countries, selected_types) {
 
-  country_is_selected("Israel & Palestine",["Israel"]);
-
   split_by = glob_split_by;
   units = glob_units;
 

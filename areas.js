@@ -29,6 +29,8 @@ Tree.prototype.traverseDF = function(callback) {
 
 Tree.prototype.traverse_with_depth = function(callback, depth) {
 
+  if(!depth) { depth = 0; }
+
   // this is a recurse and immediately-invoking function
   (function recurse(currentNode, depth) {
     // step 2
@@ -44,6 +46,20 @@ Tree.prototype.traverse_with_depth = function(callback, depth) {
   })(this._root, depth);
 
 };
+
+function print_tree(node, depth) {
+
+  var depth_string = '--';
+  for(i=0;i<depth;i++) {
+    depth_string = depth_string + '--';
+  }
+
+  if (node.children.length > 0) {
+    console.log(depth_string + ' ' + node.data + " contains " + node.children.length + " areas");
+  } else {
+    console.log(depth_string + ' ' + node.data);
+  }
+}
 
 
 // necessary?
@@ -196,10 +212,26 @@ var show_in_menu = function(region, data) {
 
 var global_tree;
 
+var add_options = function(node, depth) {
+//    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
+  if(depth == 0) { return true; }
+  target = $('#target');
+  name = node.data;
+  if(show_in_menu(name, global_data)) {
+    if(!added_areas.includes(name)) {
+      var optgroup = $('<option class="region_l'+depth+'" value="'+name+'">'+name+'</option>"');
+      target.append(optgroup);
+      added_areas.push(name);
+    }
+  }
+}
+
+var global_data;
 var make_area_tree = function(data) {
 
   // root node
   global_tree = new Tree('All');
+  global_data = data;
 
   // These are the areas immediately under All, which are hardcoded as we assume they won't change
   // Global is add as an area separate of other areas (does not contain other areas)
@@ -214,21 +246,22 @@ var make_area_tree = function(data) {
   target= $('#target');
 
   added_areas = [];
-  top_areas.forEach(function (a) {
-//    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
-    var optgroup = $('<option class="topregion" value="'+a+'">'+a+'</option>"');
-    target.append(optgroup);
-    //optgroup = $('select optgroup[label="'+a+'"]');
-    children = children_array(a);
-    children.forEach(function (c) {
-      if(show_in_menu(c, data)) {
-        if(!added_areas.includes(c)) {
-          added_areas.push(c);
-          target.append('<option class="smallregion" id="select'+c+'/" value="'+c+'">'+c+'</option>');
-        }
-      }
-    });
-  });
+  global_tree.contains(add_options, Tree.prototype.traverse_with_depth);
+//  top_areas.forEach(function (a) {
+////    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
+//    var optgroup = $('<option class="topregion" value="'+a+'">'+a+'</option>"');
+//    target.append(optgroup);
+//    //optgroup = $('select optgroup[label="'+a+'"]');
+//    children = children_array(a);
+//    children.forEach(function (c) {
+//      if(show_in_menu(c, data)) {
+//        if(!added_areas.includes(c)) {
+//          added_areas.push(c);
+//          target.append('<option class="smallregion" id="select'+c+'/" value="'+c+'">'+c+'</option>');
+//        }
+//      }
+//    });
+//  });
   global = $('select optgroup[label="Global"]');
   if(global) {
     global.append('<option value="Global">Global resolutions</option>');
