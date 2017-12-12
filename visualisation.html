@@ -6,6 +6,10 @@
   <script src="vendor/select2.js"></script>
   <script src="vendor/select2.optgroupSelect.js"></script>
   <link rel="stylesheet" type="text/css" href="vendor/select2.optgroupSelect.css">
+  <link rel="stylesheet" href="vendor/remodal.css">
+  <link rel="stylesheet" href="vendor/remodal-default-theme.css">
+  <script src="vendor/remodal.min.js"></script>
+
 </head>
 <meta charset="utf-8">
 <style>
@@ -30,7 +34,13 @@ body {
   margin-left: 3em;
 }
 
-
+.remodal {
+  text-align: left;
+  font-size: 14px;
+}
+.remodal-confirm {
+  margin-top: 25px;
+}
 
 .axis path,
 .axis line {
@@ -263,6 +273,7 @@ label {
           <label for="switch_left">Mentions</label>
         </div>
         </p>
+        <!--<a href="#modal">Call the modal with data-remodal-id="modal"</a>-->
 
       </div>
     </div>
@@ -270,6 +281,8 @@ label {
 
 	<script>
 $(function(){
+  var inst = $('[data-remodal-id=modal]').remodal();
+  inst.close();
   Tabletop.init( { key: publicSpreadsheetUrl,
     callback: load_sheet_data,
     simpleSheet: true } )
@@ -423,5 +436,9 @@ $('input:radio[name="switch_2"]').change(
         }
     });
 	</script>
+
+
+<div class="remodal" data-remodal-id="modal">
+</div>
 
 </body>

@@ -73,8 +73,10 @@ var area_is_parent_of = function(area1, area2) {
 }
 
 var get_type_count = function(data, year, type, selected_countries) {
+  resolution_urls[year][type] = [];
   return data.reduce(function(total, element) {
     if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Area, selected_countries)) {
+      resolution_urls[year][type].push(element.URL);
       return total + parseInt(element[type]);
     } else {
       return total;
@@ -84,10 +86,14 @@ var get_type_count = function(data, year, type, selected_countries) {
 
 // var get_resolution_count = function
 var get_area_count = function(data, year, area, selected_types) {
+  resolution_urls[year][area] = [];
   return data.reduce(function(total, element) {
     if (element['Year'] == year && (element.Area == area || area_is_part_of(element.Area, area))) {
       for(i=0;i<selected_types.length;i++){
-        if(element[selected_types[i]] > 0) { return total + 1; }
+        if(element[selected_types[i]] > 0) {
+          resolution_urls[year][area].push(element.URL);
+          return total + 1;
+        }
       }
       return total;
     } else {
@@ -96,11 +102,14 @@ var get_area_count = function(data, year, area, selected_types) {
   }, 0);
 }
 
+var resolution_urls = {};
 var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
 var aggregate_by_type = function aggregate_by_type(data, selected_countries, selected_types) {
+  resolutions = {};
   years = get_years(data);
   aggregated_data = {};
   years.forEach(function(year) {
+    resolutions[year] = {};
     aggregated_data[year] = {};
     selected_types.forEach(function(type) {
       aggregated_data[year][type] = get_type_count(data, year, type, selected_countries);
@@ -111,9 +120,11 @@ var aggregate_by_type = function aggregate_by_type(data, selected_countries, sel
 
 var top_regions = ["Africa", "Asia", "Central America", "Europe", "Middle East", "North America", "South America", "Global"];
 var aggregate_by_country = function(data, selected_countries, selected_types) {
+  resolution_urls = {};
   years = get_years(data);
   aggregated_data = {};
   years.forEach(function(year) {
+    resolution_urls[year] = {};
     aggregated_data[year] = {};
     if(!selected_countries) { countries = top_regions; } else { countries = selected_countries; }
     countries.forEach(function(country) {
@@ -169,7 +180,8 @@ var update_data = function update_data(selected_countries, selected_types) {
         y0: y0,
         y1: y0 += +agg_data[year][type],
         value:agg_data[year][type],
-        y_corrected: 0
+        y_corrected: 0,
+        resolution_urls: resolution_urls[year][type]
       };
     });
     agg_data[year].total = agg_data[year].resolutions[agg_data[year].resolutions.length - 1].y1;
@@ -263,6 +275,9 @@ var update_data = function update_data(selected_countries, selected_types) {
       create_legend();
 
   plot_year.selectAll("rect")
+       .on("click", function(d) {
+         display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
+       })
        .on("mouseover", function(d){
 
           var delta = d.y1 - d.y0;
@@ -378,7 +393,8 @@ function make_chart(areas, resolutions, units, split_by) {
         y0: y0,
         y1: y0 += +agg_data[year][type],
         value:agg_data[year][type],
-        y_corrected: 0
+        y_corrected: 0,
+        resolution_urls: resolution_urls[year][type]
       };
     });
     agg_data[year].total = agg_data[year].resolutions[agg_data[year].resolutions.length - 1].y1;
@@ -445,6 +461,9 @@ function make_chart(areas, resolutions, units, split_by) {
       .style("fill", function(d) { return color(d.type); });
 
   plot_year.selectAll("rect")
+       .on("click", function(d) {
+         display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
+       })
        .on("mouseover", function(d){
 
           var delta = d.y1 - d.y0;
@@ -554,4 +573,17 @@ function switch_view(units, split_by) {
   glob_units = units;
   glob_split_by = split_by;
   make_chart(glob_areas, glob_data, units, split_by);
+}
+
+function display_modal(urls, type, year) {
+  var inst = $('[data-remodal-id=modal]').remodal();
+  html = '<p>The Security Council resolutions for '+ type +' in '+ year +', under the current selections:</p><ul>';
+  urls.forEach(function (u) {
+    html += '<li><a target="_blank" href="'+u+'">';
+    html += u.split('=')[1];
+    html += '</a></li>';
+  });
+  html += '</ul><button data-remodal-action="confirm" class="remodal-confirm">OK</button>';
+  inst.$modal.html(html);
+  inst.open();
 }
