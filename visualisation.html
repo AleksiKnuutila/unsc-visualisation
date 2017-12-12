@@ -211,7 +211,7 @@ label {
           -->
         </select>
 
-        <input type="button" class="button" onclick="$('#target').select2('val',null)" value="Clear">
+        <input type="button" class="button" onclick="$('#target').select2('val',null); $('#target').trigger({type: 'select2:unselect'});" value="Clear">
 
       </div>
 
@@ -331,7 +331,6 @@ var find_select = function(value) {
   return $('#target').find("option[value='" + value + "']");
 }
 
-// multi values, with last selected
 var old_values = [];
 //$('#target').on('change', function (evt) {
 $('#target').on("select2:select", function(event) {
@@ -344,22 +343,35 @@ $('#target').on("select2:select", function(event) {
   var new_area = $(values).not(old_values).get()[0];
   // remove all parents and children of added area
   // remove all children of added area
-  new_values = [];
-  old_values.forEach(function(c) {
-    if (area_is_part_of(c, new_area) || area_is_parent_of(c, new_area)) {
-      find_select(c).removeAttr("selected");
-      find_select(c).attr("aria-selected", "false");
-      $("#target").select2("close");
-      $("#target").select2("open");
-    } else {
-      new_values.push(c);
-    }
-  });
-  new_values.push(new_area);
+  if(new_area) {
+    new_values = [];
+    console.log('old '+old_values);
+    console.log('last '+new_area);
+    old_values.forEach(function(c) {
+      if (area_is_part_of(c, new_area) || area_is_parent_of(c, new_area)) {
+        find_select(c).removeAttr("selected");
+        find_select(c).attr("aria-selected", "false");
+        $("#target").select2("close");
+        $("#target").select2("open");
+      } else {
+        new_values.push(c);
+      }
+    });
+    console.log('new '+new_values);
+    new_values.push(new_area);
+  } else {
+    new_values = old_values;
+  }
   $('#target').val(new_values);
   $('#target').trigger('change');
   // update old_values for future use
   old_values = new_values;
+  update_selections();
+});
+$('#target').on("select2:unselect", function(event) {
+  vals = $('#target').val();
+  old_values = vals;
+  if(!old_values) { old_values = []; }
   update_selections();
 });
 
