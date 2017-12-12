@@ -215,7 +215,8 @@ var make_area_tree = function(data) {
 
   added_areas = [];
   top_areas.forEach(function (a) {
-    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
+//    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
+    var optgroup = $('<option class="topregion" value="'+a+'">'+a+'</option>"');
     target.append(optgroup);
     //optgroup = $('select optgroup[label="'+a+'"]');
     children = children_array(a);
@@ -223,7 +224,7 @@ var make_area_tree = function(data) {
       if(show_in_menu(c, data)) {
         if(!added_areas.includes(c)) {
           added_areas.push(c);
-          optgroup.append('<option value="'+c+'">'+c+'</option>');
+          target.append('<option class="smallregion" id="select'+c+'/" value="'+c+'">'+c+'</option>');
         }
       }
     });

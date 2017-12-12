@@ -278,7 +278,7 @@ var update_data = function update_data(selected_countries, selected_types) {
           .attr("x",xPos)
           .attr("y",yPos +height/2)
           .attr("class","tooltip")
-          .text(d.type +": "+ delta);
+          .text(type_code_to_legend(d.type) +": "+ delta);
 
        })
        .on("mouseout",function(){
@@ -460,7 +460,7 @@ function make_chart(areas, resolutions, units, split_by) {
           .attr("x",xPos)
           .attr("y",yPos +height/2)
           .attr("class","tooltip")
-          .text(d.type +": "+ delta);
+          .text(type_code_to_legend(d.type) +": "+ delta);
 
        })
        .on("mouseout",function(){
@@ -557,4 +557,3 @@ function switch_view(units, split_by) {
   glob_split_by = split_by;
   make_chart(glob_areas, glob_data, units, split_by);
 }
-

@@ -5,9 +5,9 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
         OptgroupData.__super__.constructor.apply(this, arguments);
         this._checkOptgroups();
     }
-    
+
     Utils.Extend(OptgroupData, SelectAdapter);
-    
+
     OptgroupData.prototype.current = function (callback) {
         var data = [];
         var self = this;
@@ -15,37 +15,37 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
         this.$element.find(':not(.selected-custom) :selected, .selected-custom').each(function () {
             var $option = $(this);
             var option = self.item($option);
-            
+
             if (!option.hasOwnProperty('id')) {
                 option.id = 'optgroup';
             }
-            
+
             data.push(option);
         });
 
         callback(data);
     };
-    
+
     OptgroupData.prototype.bind = function (container, $container) {
-        OptgroupData.__super__.bind.apply(this, arguments);        
+        OptgroupData.__super__.bind.apply(this, arguments);
         var self = this;
 
         container.on('optgroup:select', function (params) {
             self.optgroupSelect(params.data);
         });
-        
+
         container.on('optgroup:unselect', function (params) {
             self.optgroupUnselect(params.data);
         });
     };
-    
+
     OptgroupData.prototype.select = function (data) {
         if ($(data.element).is('optgroup')){
             this.optgroupSelect(data);
             return;
         }
 
-        // Change selected property on underlying option element 
+        // Change selected property on underlying option element
         data.selected = true;
         data.element.selected = true;
 
@@ -53,25 +53,25 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
         this.clearSearch();
 
         // Manually trigger dropdrop positioning handler
-        $(window).trigger('scroll.select2');        
+        $(window).trigger('scroll.select2');
     };
-    
+
     OptgroupData.prototype.unselect = function (data) {
         if ($(data.element).is('optgroup')){
             this.optgroupUnselect(data);
             return;
         }
-        
-        // Change selected property on underlying option element 
+
+        // Change selected property on underlying option element
         data.selected = false;
         data.element.selected = false;
-        
+
         this.$element.trigger('change');
-        
+
         // Manually trigger dropdrop positioning handler
         $(window).trigger('scroll.select2');
     };
-    
+
     OptgroupData.prototype.optgroupSelect = function (data) {
         data.selected = true;
         var vals = this.$element.val() || [];
@@ -79,21 +79,21 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
         var newVals = $.map(data.element.children, function(child){
             return '' + child.value;
         });
-        
+
         newVals.forEach(function(val){
             if ($.inArray(val, vals) == -1){
                 vals.push(val);
             }
         });
-        
+
         this.$element.val(vals);
         this.$element.trigger('change');
         this.clearSearch();
-        
+
         // Manually trigger dropdrop positioning handler
         $(window).trigger('scroll.select2');
     };
-    
+
     OptgroupData.prototype.optgroupUnselect = function (data) {
         data.selected = false;
         var vals = this.$element.val() || [];
@@ -101,7 +101,7 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
             return '' + child.value;
         });
         var newVals = [];
-        
+
         vals.forEach(function(val){
             if ($.inArray(val, removeVals) == -1){
                 newVals.push(val);
@@ -113,35 +113,35 @@ $.fn.select2.amd.define('optgroup-data', ['select2/data/select', 'select2/utils'
         // Manually trigger dropdrop positioning handler
         $(window).trigger('scroll.select2');
     };
-    
+
     // Check if all children of optgroup are selected. If so, select optgroup
     OptgroupData.prototype._checkOptgroups = function(){
         this.$element.find('optgroup').each(function(){
             var children = this.children;
-            
+
             var allSelected = !!children.length;
-            
+
             for (var i = 0; i < children.length; i++) {
                 allSelected = children[i].selected;
                 if (!allSelected) { break; }
             }
-            
-            $(this).toggleClass('selected-custom', allSelected);
+
+ $(this).toggleClass('selected-custom', allSelected);
         });
 
     };
-    
+
     OptgroupData.prototype.clearSearch = function(){
         if (!this.container) {
             return;
-        } 
-        
+        }
+
         if (this.container.selection.$search.val()) {
             this.container.selection.$search.val('');
             this.container.selection.handleSearch();
         }
-    } 
-    
+    }
+
     return OptgroupData;
 });
 $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',  'select2/keys'], function OptgroupResults (ResultsAdapter, Utils, KEYS) {
@@ -150,7 +150,7 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
     };
 
     Utils.Extend(OptgroupResults, ResultsAdapter);
-        
+
     OptgroupResults.prototype.option = function (data) {
         var option = OptgroupResults.__super__.option.call(this, data);
 
@@ -162,29 +162,29 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
             });
             $label.data('data', data);
         }
-        
+
         return option;
     };
-    
+
     OptgroupResults.prototype.bind = function(container, $container) {
         OptgroupResults.__super__.bind.call(this, container, $container);
         var self = this;
-        
+
         this.$results.on('mouseup', '.select2-results__group', function(evt) {
             var $this = $(this);
-            
+
             var data = $this.data('data');
 
             var trigger = ($this.attr('aria-selected') === 'true')  ? 'optgroup:unselect' : 'optgroup:select';
-            
+
             self.trigger(trigger, {
                 originalEvent: evt,
                 data: data
             });
-                
+
             return false;
         });
-        
+
         this.$results.on('mouseenter', '.select2-results__group[aria-selected]', function(evt) {
             var data = $(this).data('data');
 
@@ -195,17 +195,17 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
                 data: data,
                 element: $(this)
             });
-        });        
-        
+        });
+
         container.on('optgroup:select', function () {
             if (!container.isOpen()) {
                 return;
             }
-            
+
             if (self.options.options.closeOnSelect) {
                 self.trigger('close');
             }
-            
+
             self.setClasses();
         });
 
@@ -217,14 +217,14 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
             self.setClasses();
         });
     };
-    
+
     OptgroupResults.prototype.setClasses = function(container, $container) {
         var self = this;
 
         this.data.current(function (selected) {
             var selectedIds = [];
             var optgroupLabels = [];
-            
+
             $.each(selected, function (i, obj) {
                 if (obj.children) {
                     optgroupLabels.push(obj.text);
@@ -246,7 +246,7 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
                 // id needs to be converted to a string when comparing
                 var id = '' + item.id;
 
-                if ((item.element != null && item.element.selected) || 
+                if ((item.element != null && item.element.selected) ||
                     (item.element == null && $.inArray(id, selectedIds) > -1)) {
                         $option.attr('aria-selected', 'true');
                 } else {
@@ -254,9 +254,9 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
                 }
             });
 
-        
+
             var $groups = self.$results.find('.select2-results__group[aria-selected]');
-        
+
             $groups.each(function () {
                 var $optgroup = $(this);
                 var item = $.data(this, 'data');
@@ -275,7 +275,7 @@ $.fn.select2.amd.define('optgroup-results', ['select2/results', 'select2/utils',
             }
         });
     };
-    
+
     return OptgroupResults;
 });
 })(jQuery);

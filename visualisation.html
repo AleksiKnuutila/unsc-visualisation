@@ -14,6 +14,14 @@ body {
   font: 10px sans-serif;
 }
 
+.topregion {
+  font-weight: bold;
+}
+
+.smallregion {
+  margin-left: 1em;
+}
+
 .axis path,
 .axis line {
   fill: none;
@@ -255,15 +263,35 @@ $(function(){
   Tabletop.init( { key: publicSpreadsheetUrl,
     callback: load_sheet_data,
     simpleSheet: true } )
-    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
-        function (OptgroupData, OptgroupResults) {
-          $('#target').select2({
-            dataAdapter: OptgroupData,
-            resultsAdapter: OptgroupResults,
-            closeOnSelect: false,
-            placeholder: "Displaying all - type to search"
-          });
-        });
+  $('#target').select2(
+      {
+        placeholder: "Displaying all - type to search",
+        closeOnSelect: false,
+        templateResult: function (data) {
+          // We only really care if there is an element to pull classes from
+          if (!data.element) {
+            return data.text;
+          }
+
+          var $element = $(data.element);
+
+          var $wrapper = $('<span></span>');
+          $wrapper.addClass($element[0].className);
+
+          $wrapper.text(data.text);
+
+          return $wrapper;
+        }
+      });
+//    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
+//        function (OptgroupData, OptgroupResults) {
+//          $('#target').select2({
+//            dataAdapter: OptgroupData,
+//            resultsAdapter: OptgroupResults,
+//            closeOnSelect: false,
+//            placeholder: "Displaying all - type to search"
+//          });
+//        });
   $('#target2').select2(
       {
         placeholder: "Displaying all - type to search",
@@ -288,15 +316,80 @@ var get_selected_types = function() {
   return type_selections;
 }
 
-  var update_selections = function() {
-    update_data(get_selected_countries(), get_selected_types());
-  }
-  $('#target').on('change', function (evt) {
-    update_selections();
+var remove_from_selections = function(selections, new_area) {
+//  new_selections = $.grep(selections, function (area) {
+//  });
+  return new_selections;
+}
+
+var update_selections = function() {
+  update_data(get_selected_countries(), get_selected_types());
+  $('#target').trigger('change');
+}
+
+var find_select = function(value) {
+  return $('#target').find("option[value='" + value + "']");
+}
+
+// multi values, with last selected
+var old_values = [];
+//$('#target').on('change', function (evt) {
+$('#target').on("select2:select", function(event) {
+  var values = [];
+  // copy all option values from selected
+  $(event.currentTarget).find("option:selected").each(function(i, selected){
+    values[i] = $(selected).text();
   });
-  $('#target2').on('change', function (evt) {
-    update_selections();
+  // doing a diff of old_values gives the new values selected
+  var new_area = $(values).not(old_values).get()[0];
+  // remove all parents and children of added area
+  // remove all children of added area
+  new_values = [];
+  old_values.forEach(function(c) {
+    if (area_is_part_of(c, new_area) || area_is_parent_of(c, new_area)) {
+      find_select(c).removeAttr("selected");
+      find_select(c).attr("aria-selected", "false");
+      $("#target").select2("close");
+      $("#target").select2("open");
+    } else {
+      new_values.push(c);
+    }
   });
+  new_values.push(new_area);
+  $('#target').val(new_values);
+  $('#target').trigger('change');
+  // update old_values for future use
+  old_values = new_values;
+  update_selections();
+});
+
+//$('#target').on("change", function(event) {
+//  vals = $('#target').val();
+//  if('Chad' in vals) {
+//    find_select('Chad').prop('selected', false)
+//    find_select('Chad').attr("aria-selected", false);
+//    $('#target').val('Africa');
+//    $('#target').trigger('change');
+//    $("#target").select2("open");
+//  }
+//});
+
+
+  // make sure that we don't simultaneously select regions and parts of regions
+//  var vals = $('#target').val();
+//  if(vals && vals.length > 1) {
+//    vals.forEach(function(v) {
+//      vals.forEach(function(v2) {
+//        if(area_is_part_of(v,v2)) {
+//          remove_from_selections(v);
+//        }
+//      });
+//    });
+//  }
+//});
+$('#target2').on('change', function (evt) {
+  update_selections();
+});
 
 
 $('input:radio[name="switch_2"]').change(
