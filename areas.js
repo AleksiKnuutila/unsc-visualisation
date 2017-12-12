@@ -117,7 +117,6 @@ Tree.prototype.find = function(data) {
   return result;
 }
 
-//Tree.prototype.add = function(data, toData, traversal) {
 Tree.prototype.add = function(data, toData) {
   var child = new Node(data),
   parent = null,
@@ -133,6 +132,11 @@ Tree.prototype.add = function(data, toData) {
   if (parent) {
     parent.children.push(child);
     child.parent = parent;
+    parent.children = parent.children.sort(function(a, b){
+      if(a.data < b.data) return -1;
+      if(a.data > b.data) return 1;
+      return 0;
+    });
   } else {
     throw new Error('Cannot add node to a non-existent parent.');
   }
@@ -247,21 +251,6 @@ var make_area_tree = function(data) {
 
   added_areas = [];
   global_tree.contains(add_options, Tree.prototype.traverse_with_depth);
-//  top_areas.forEach(function (a) {
-////    var optgroup = $('<optgroup label="'+a+'"></optgroup>"');
-//    var optgroup = $('<option class="topregion" value="'+a+'">'+a+'</option>"');
-//    target.append(optgroup);
-//    //optgroup = $('select optgroup[label="'+a+'"]');
-//    children = children_array(a);
-//    children.forEach(function (c) {
-//      if(show_in_menu(c, data)) {
-//        if(!added_areas.includes(c)) {
-//          added_areas.push(c);
-//          target.append('<option class="smallregion" id="select'+c+'/" value="'+c+'">'+c+'</option>');
-//        }
-//      }
-//    });
-//  });
   global = $('select optgroup[label="Global"]');
   if(global) {
     global.append('<option value="Global">Global resolutions</option>');
