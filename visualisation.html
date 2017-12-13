@@ -86,7 +86,6 @@ label {
   display: inline-block;
 }
 
-
 .switch-field {
   font-family: "Lucida Grande", Tahoma, Verdana, sans-serif;
   overflow: hidden;
@@ -167,7 +166,11 @@ label {
   animation: spin 2s linear infinite;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 100px;
+}
+
+#loadingdiv {
+  margin-bottom: 250px;
+  display: block;
 }
 
 @keyframes spin {
@@ -183,7 +186,10 @@ label {
 
 <body>
 
-  <div id="loader"></div>
+  <div id="loadingdiv">
+    <div id="loader"></div>
+  </div>
+  <div style="display: inline-block;"></div>
 
   <div id="loadedcontent" style="display: none;">
     <div id="targetdiv"></div>
@@ -197,7 +203,6 @@ label {
     <script type="text/javascript" src="visualisation.js"></script>
 
     <div style="clear:both;"></div>
-
 
       <p style="margin-top: 0px; margin-bottom: 30px; font-size: 14px; color: #333333; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif; margin-left: 26px; font-size: 12px;">
       <a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQsWHmuNiqqPszC6M47cq_PnhXiWkvfl5PUClS0t2u6yJszzzwUKHJNI623iW2cUMCzLu-MUFwaeI8x/pubhtml?gid=1934247085&single=true">Source data</a>
