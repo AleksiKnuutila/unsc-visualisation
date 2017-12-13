@@ -132,11 +132,11 @@ Tree.prototype.add = function(data, toData) {
   if (parent) {
     parent.children.push(child);
     child.parent = parent;
-    parent.children = parent.children.sort(function(a, b){
-      if(a.data < b.data) return -1;
-      if(a.data > b.data) return 1;
-      return 0;
-    });
+//    parent.children = parent.children.sort(function(a, b){
+//      if(a.data < b.data) return -1;
+//      if(a.data > b.data) return 1;
+//      return 0;
+//    });
   } else {
     throw new Error('Cannot add node to a non-existent parent.');
   }
