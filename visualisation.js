@@ -293,7 +293,7 @@ var update_data = function update_data(selected_countries, selected_types) {
 var load_sheet_data = function(data, tabletop) {
   $("#loader").fadeOut(400);
   $("#loadedcontent").fadeIn(400);
-  glob_data = tabletop.sheets('Cleaned Data').elements;
+  glob_data = tabletop.sheets('Resolutions').elements;
   areas = tabletop.sheets('Areas').elements;
   make_chart(areas, glob_data);
 }
