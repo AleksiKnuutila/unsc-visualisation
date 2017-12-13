@@ -206,7 +206,11 @@ var update_data = function update_data(selected_countries, selected_types) {
   });
 
   total_vals = years.map(function(y) { return agg_data[y].total });
-  y.domain([0, d3.max(total_vals)]);
+  if(d3.max(total_vals) > 10) {
+    y.domain([0, d3.max(total_vals)]);
+  } else {
+    y.domain([0, 10]);
+  }
   svg.transition()
     .duration(750)
     .select(".y.axis")
@@ -396,7 +400,11 @@ function make_chart(areas, resolutions, units, split_by) {
   });
   x.domain(years);
   total_vals = years.map(function(y) { return agg_data[y].total });
-  y.domain([0, d3.max(total_vals)]);
+  if(d3.max(total_vals) > 10) {
+    y.domain([0, d3.max(total_vals)]);
+  } else {
+    y.domain([0, 10]);
+  }
 
   svg.append("g")
     .attr("class", "x axis")
