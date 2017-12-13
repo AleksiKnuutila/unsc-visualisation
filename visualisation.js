@@ -110,7 +110,22 @@ var get_area_count = function(data, year, area, selected_types) {
 }
 
 var resolution_urls = {};
-var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
+//var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
+var types = ['Human Trafficking',
+'Human Smuggling',
+'Drug Trafficking',
+'Arms Smuggling',
+'Arms Trafficking',
+'Resource Trafficking',
+'Wildlife Trafficking',
+'Theft / Armed Robbery',
+'Piracy',
+'Goods Trafficking',
+'Financial Crime',
+'Cyber Crime',
+'Terrorism',
+'Kidnapping / Abductions'];
+
 var aggregate_by_type = function aggregate_by_type(data, selected_countries, selected_types) {
   resolutions = {};
   years = get_years(data);
