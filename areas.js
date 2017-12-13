@@ -222,11 +222,11 @@ var add_options = function(node, depth) {
   target = $('#target');
   name = node.data;
   if(show_in_menu(name, global_data)) {
-    if(!added_areas.includes(name)) {
+//    if(!added_areas.includes(name)) {
       var optgroup = $('<option class="region_l'+depth+'" value="'+name+'">'+name+'</option>"');
       target.append(optgroup);
       added_areas.push(name);
-    }
+//    }
   }
 }
 
