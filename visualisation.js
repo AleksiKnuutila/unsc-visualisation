@@ -1,38 +1,47 @@
+var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1SyjZImXYewbyYDrybBiQ6039_xrfAsxqDFuOd6OG2_k/edit?usp=sharing';
+//
+// default view when loading page
+var glob_split_by = 'countries';
+var glob_units = 'resolutions';
+var glob_areas = [];
+var glob_data = [];
+
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
-    .rangeRoundBands([0, width-125], .1);
+  .rangeRoundBands([0, width-125], .1);
 
 var y = d3.scale.linear()
-    .rangeRound([height, 0]);
+  .rangeRound([height, 0]);
 
 var color = d3.scale.ordinal()
   .range(['#80b1d3', '#fb8072', '#b3de69', '#8dd3c7', '#71a285', '#fccde5', '#d9d9d9', '#ffed6f', '#bc80bd', '#bebada', '#ffffb3', '#d2d6b0', '#ccebc5', '#fdb462']);
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom");
+  var xAxis = d3.svg.axis()
+.scale(x)
+  .orient("bottom");
 
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .tickFormat(d3.format("d"));
+  var yAxis = d3.svg.axis()
+.scale(y)
+  .orient("left")
+  .tickFormat(d3.format("d"));
 
-var svg;
+  var svg;
 
-var active_link = "0"; //to control legend selections and hover
-var legendClicked; //to control legend selections
-var legendClassArray = []; //store legend classes to select bars in plotSingle()
-var legendClassArray_orig = []; //orig (with spaces)
-var restoreXFlag = false; //restore order of bars back to original
+  var active_link = "0"; //to control legend selections and hover
+  var legendClicked; //to control legend selections
+  var legendClassArray = []; //store legend classes to select bars in plotSingle()
+  var legendClassArray_orig = []; //orig (with spaces)
+  var restoreXFlag = false; //restore order of bars back to original
 
-// find range of years in data
-var get_years = function(data) {
-  years = data.map(function(x) { return x['Year']; });
-  unique_years = years.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
-  return unique_years.sort();
-}
+
+  // find range of years in data
+  var get_years = function(data) {
+    years = data.map(function(x) { return x['Year']; });
+    unique_years = years.filter(function(item, i, ar){ return ar.indexOf(item) === i; });
+    return unique_years.sort();
+  }
 
 var country_is_selected = function(country, selected_countries) {
   // if no selection, let's display all
@@ -43,7 +52,6 @@ var country_is_selected = function(country, selected_countries) {
       if(country == selected_countries[i]) {
         return true;
       }
-//      if(area_is_part_of(country, selected_countries[i]) || area_is_parent_of(country, selected_countries[i]) ) { return true; }
       if(area_is_part_of(country, selected_countries[i])) { return true; }
     }
   }
@@ -84,7 +92,6 @@ var get_type_count = function(data, year, type, selected_countries) {
   }, 0);
 }
 
-// var get_resolution_count = function
 var get_area_count = function(data, year, area, selected_types) {
   resolution_urls[year][area] = [];
   return data.reduce(function(total, element) {
@@ -134,15 +141,11 @@ var aggregate_by_country = function(data, selected_countries, selected_types) {
   return aggregated_data;
 }
 
-// default view when loading page
-var glob_split_by = 'countries';
-var glob_units = 'resolutions';
-
 //disable sort checkbox
 d3.select("label")
-  .select("input")
-  .property("disabled", true)
-  .property("checked", false);
+.select("input")
+.property("disabled", true)
+.property("checked", false);
 
 var update_data = function update_data(selected_countries, selected_types) {
 
@@ -196,121 +199,96 @@ var update_data = function update_data(selected_countries, selected_types) {
     .selectAll("g");
 
   plot_year.data(years.map(function (y) { return agg_data[y] }))
-      .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
+    .attr("class", "g")
+    .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
 
-   height_diff = 0;  //height discrepancy when calculating h based on data vs y(d.y0) - y(d.y1)
-   rects = plot_year.selectAll("rect")
+  height_diff = 0;  //height discrepancy when calculating h based on data vs y(d.y0) - y(d.y1)
+  rects = plot_year.selectAll("rect")
     .data(function(d) {
       return d.resolutions;
     })
 
-   //   update here?
-   rects
+  rects
     .transition()
     .duration(750)
     .attr("width", x.rangeBand()) //restore bar width
     .style("opacity", 1)
-      .attr("y", function(d) {
-        height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
-        y_corrected = y(d.y1) + height_diff;
-        d.y_corrected = y_corrected //store in d for later use in restorePlot()
-        //xx if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
+    .attr("y", function(d) {
+      height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
+      y_corrected = y(d.y1) + height_diff;
+      d.y_corrected = y_corrected //store in d for later use in restorePlot()
         if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
-        return y_corrected;
-        // return y(d.y1);  //orig, but not accurate
-      })
-      .attr("x",function(d) { //add to stock code
-          return x(d.year)
-        })
-      .attr("height", function(d) {
-        //return y(d.y0) - y(d.y1); //heights calculated based on stacked values (inaccurate)
-        return y(0) - y(d.value); //calculate height directly from value in csv file
-      })
-      .attr("class", function(d) {
-        classLabel = d.type.replace(/\s/g, ''); //remove spaces
-        return "bars class" + classLabel;
-      })
-      .style("fill", function(d) { return color(d.type); });
+      return y_corrected;
+    })
+  .attr("x",function(d) { //add to stock code
+    return x(d.year)
+  })
+  .attr("height", function(d) {
+    return y(0) - y(d.value); //calculate height directly from value in csv file
+  })
+  .attr("class", function(d) {
+    classLabel = d.type.replace(/\s/g, ''); //remove spaces
+    return "bars class" + classLabel;
+  })
+  .style("fill", function(d) { return color(d.type); });
 
-   rects
+  rects
     .exit()
     .transition()
     .duration(750)
-//    .attr("width", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
     .attr("height", 0) // use because svg has no zindex to hide bars so can't select visible bar underneath
     .style("opacity", 0);
 
-//   rects
-//    .exit()
-//    .transition()
-//    .duration(750)
-//    .remove();
-
-   rects.enter()
+  rects.enter()
     .append("rect")
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) {
-        height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
-        y_corrected = y(d.y1) + height_diff;
-        d.y_corrected = y_corrected //store in d for later use in restorePlot()
-//        if (d.type === types[types.length-1]) height_diff = 0; //reset for next year
+    .attr("width", x.rangeBand())
+    .attr("y", function(d) {
+      height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
+      y_corrected = y(d.y1) + height_diff;
+      d.y_corrected = y_corrected //store in d for later use in restorePlot()
         if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
-        return y_corrected;
-        // return y(d.y1);  //orig, but not accurate
-      })
-      .attr("x",function(d) { //add to stock code
-          return x(d.year)
-        })
-      .attr("height", function(d) {
-        //return y(d.y0) - y(d.y1); //heights calculated based on stacked values (inaccurate)
-        return y(0) - y(d.value); //calculate height directly from value in csv file
-      })
-      .attr("class", function(d) {
-        classLabel = d.type.replace(/\s/g, ''); //remove spaces
-        return "bars class" + classLabel;
-      })
-      .style("fill", function(d) { return color(d.type); });
+      return y_corrected;
+    })
+  .attr("x",function(d) { //add to stock code
+    return x(d.year)
+  })
+  .attr("height", function(d) {
+    return y(0) - y(d.value); //calculate height directly from value in csv file
+  })
+  .attr("class", function(d) {
+    classLabel = d.type.replace(/\s/g, ''); //remove spaces
+    return "bars class" + classLabel;
+  })
+  .style("fill", function(d) { return color(d.type); });
 
-      $(".legend").remove()
-      create_legend();
+  $(".legend").remove()
+    create_legend();
 
   plot_year.selectAll("rect")
-       .on("click", function(d) {
-         display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
-       })
-       .on("mouseover", function(d){
+    .on("click", function(d) {
+      display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
+    })
+  .on("mouseover", function(d){
 
-          var delta = d.y1 - d.y0;
-          var xPos = parseFloat(d3.select(this).attr("x"));
-          var yPos = parseFloat(d3.select(this).attr("y"));
-          var height = parseFloat(d3.select(this).attr("height"))
+    var delta = d.y1 - d.y0;
+    var xPos = parseFloat(d3.select(this).attr("x"));
+    var yPos = parseFloat(d3.select(this).attr("y"));
+    var height = parseFloat(d3.select(this).attr("height"))
 
-          d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+      d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
 
-          svg.append("text")
-          .attr("x",xPos)
-          .attr("y",yPos +height/2)
-          .attr("class","tooltip")
-          .text(type_code_to_legend(d.type) +": "+ delta);
+    svg.append("text")
+      .attr("x",xPos)
+      .attr("y",yPos +height/2)
+      .attr("class","tooltip")
+      .text(type_code_to_legend(d.type) +": "+ delta);
 
-       })
-       .on("mouseout",function(){
-          svg.select(".tooltip").remove();
-          d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
-        })
+  })
+  .on("mouseout",function(){
+    svg.select(".tooltip").remove();
+    d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+  })
 }
-
-var glob_areas = [];
-var glob_data = [];
-var plot_year;
-
-//queue()
-//	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/areas.csv')
-//	.defer(d3.csv, 'https://areas-aleksi.hashbase.io/resolutions.csv')
-//	.await(make_chart);
-
-var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1SyjZImXYewbyYDrybBiQ6039_xrfAsxqDFuOd6OG2_k/edit?usp=sharing';
 
 var load_sheet_data = function(data, tabletop) {
   $("#loader").fadeOut(400);
@@ -344,6 +322,7 @@ var type_code_to_legend = function(type) {
   }
 }
 
+var plot_year;
 function make_chart(areas, resolutions, units, split_by) {
 
   if(glob_areas.length == 0) {
@@ -352,11 +331,11 @@ function make_chart(areas, resolutions, units, split_by) {
   }
 
   svg = d3.select("#targetdiv").append("svg")
-      .attr("id", "graph")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+    .attr("id", "graph")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
     .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   if(!units) { units = 'resolutions'; }
   if(!split_by) { split_by = 'countries'; }
@@ -405,9 +384,9 @@ function make_chart(areas, resolutions, units, split_by) {
   y.domain([0, d3.max(total_vals)]);
 
   svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
 
   if(split_by == 'countries') {
     var y_text = 'Resolutions';
@@ -416,76 +395,74 @@ function make_chart(areas, resolutions, units, split_by) {
   }
 
   svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
+    .attr("class", "y axis")
+    .call(yAxis)
     .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 6)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text(y_text);
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .text(y_text);
 
   plot_year = svg.selectAll(".plot_year")
     .data(years.map(function (y) { return agg_data[y] }))
     .enter().append("g")
-      .attr("class", "g")
-      .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
+    .attr("class", "g")
+    .attr("transform", function(d) { return "translate(" + "0" + ",0)"; });
 
-   height_diff = 0;  //height discrepancy when calculating h based on data vs y(d.y0) - y(d.y1)
-   plot_year.selectAll("rect")
-      .data(function(d) {
-        return d.resolutions;
-      })
-    .enter().append("rect")
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) {
-        height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
-        y_corrected = y(d.y1) + height_diff;
-        d.y_corrected = y_corrected //store in d for later use in restorePlot()
+  height_diff = 0;  //height discrepancy when calculating h based on data vs y(d.y0) - y(d.y1)
+  plot_year.selectAll("rect")
+    .data(function(d) {
+      return d.resolutions;
+    })
+  .enter().append("rect")
+    .attr("width", x.rangeBand())
+    .attr("y", function(d) {
+      height_diff = height_diff + y(d.y0) - y(d.y1) - (y(0) - y(d.value));
+      y_corrected = y(d.y1) + height_diff;
+      d.y_corrected = y_corrected //store in d for later use in restorePlot()
 
         if (d.type === legend[legend.length-1]) height_diff = 0; //reset for next year
 
-        return y_corrected;
-        // return y(d.y1);  //orig, but not accurate
-      })
-      .attr("x",function(d) { //add to stock code
-          return x(d.year)
-        })
-      .attr("height", function(d) {
-        //return y(d.y0) - y(d.y1); //heights calculated based on stacked values (inaccurate)
-        return y(0) - y(d.value); //calculate height directly from value in csv file
-      })
-      .attr("class", function(d) {
-        classLabel = d.type.replace(/\s/g, ''); //remove spaces
-        return "bars class" + classLabel;
-      })
-      .style("fill", function(d) { return color(d.type); });
+      return y_corrected;
+    })
+  .attr("x",function(d) { //add to stock code
+    return x(d.year)
+  })
+  .attr("height", function(d) {
+    return y(0) - y(d.value); //calculate height directly from value in csv file
+  })
+  .attr("class", function(d) {
+    classLabel = d.type.replace(/\s/g, ''); //remove spaces
+    return "bars class" + classLabel;
+  })
+  .style("fill", function(d) { return color(d.type); });
 
   plot_year.selectAll("rect")
-       .on("click", function(d) {
-         display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
-       })
-       .on("mouseover", function(d){
+    .on("click", function(d) {
+      display_modal(d.resolution_urls,type_code_to_legend(d.type),d.year);
+    })
+  .on("mouseover", function(d){
 
-          var delta = d.y1 - d.y0;
-          var xPos = parseFloat(d3.select(this).attr("x"));
-          var yPos = parseFloat(d3.select(this).attr("y"));
-          var height = parseFloat(d3.select(this).attr("height"))
+    var delta = d.y1 - d.y0;
+    var xPos = parseFloat(d3.select(this).attr("x"));
+    var yPos = parseFloat(d3.select(this).attr("y"));
+    var height = parseFloat(d3.select(this).attr("height"))
 
-          d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
+      d3.select(this).attr("stroke","blue").attr("stroke-width",0.8);
 
-          svg.append("text")
-          .attr("x",xPos)
-          .attr("y",yPos +height/2)
-          .attr("class","tooltip")
-          .text(type_code_to_legend(d.type) +": "+ delta);
+    svg.append("text")
+      .attr("x",xPos)
+      .attr("y",yPos +height/2)
+      .attr("class","tooltip")
+      .text(type_code_to_legend(d.type) +": "+ delta);
 
-       })
-       .on("mouseout",function(){
-          svg.select(".tooltip").remove();
-          d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
+  })
+  .on("mouseout",function(){
+    svg.select(".tooltip").remove();
+    d3.select(this).attr("stroke","pink").attr("stroke-width",0.2);
 
-        })
+  })
 
   create_legend();
 
@@ -493,14 +470,14 @@ function make_chart(areas, resolutions, units, split_by) {
   function restorePlot(d) {
     //restore graph after a single selection
     d3.selectAll(".bars:not(.class" + class_keep + ")")
-          .transition()
-          .duration(1000)
-          .delay(function() {
-            if (restoreXFlag) return 3000;
-            else return 750;
-          })
-          .attr("width", x.rangeBand()) //restore bar width
-          .style("opacity", 1);
+      .transition()
+      .duration(1000)
+      .delay(function() {
+        if (restoreXFlag) return 3000;
+        else return 750;
+      })
+    .attr("width", x.rangeBand()) //restore bar width
+      .style("opacity", 1);
 
     //translate bars back up to original y-posn
     d3.selectAll(".class" + class_keep)
@@ -511,10 +488,10 @@ function make_chart(areas, resolutions, units, split_by) {
         if (restoreXFlag) return 2000; //bars have to be restored to orig posn
         else return 0;
       })
-      .attr("y", function(d) {
-        //return y(d.y1); //not exactly correct since not based on raw data value
-        return d.y_corrected;
-      });
+    .attr("y", function(d) {
+      //return y(d.y1); //not exactly correct since not based on raw data value
+      return d.y_corrected;
+    });
 
     //reset
     restoreXFlag = false;
@@ -525,45 +502,45 @@ function make_chart(areas, resolutions, units, split_by) {
 var create_legend = function() {
 
   var legend = svg.selectAll(".legend")
-      .data(color.domain().slice().reverse())
+    .data(color.domain().slice().reverse())
     .enter().append("g")
-      .attr("class", function (d) {
-        legendClassArray.push(d.replace(/\s/g, '')); //remove spaces
-        legendClassArray_orig.push(d); //remove spaces
-        return "legend";
-      })
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+    .attr("class", function (d) {
+      legendClassArray.push(d.replace(/\s/g, '')); //remove spaces
+      legendClassArray_orig.push(d); //remove spaces
+      return "legend";
+    })
+  .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
 
   //reverse order to match order in which bars are stacked
   legendClassArray = legendClassArray.reverse();
   legendClassArray_orig = legendClassArray_orig.reverse();
 
   legend.append("rect")
-      .attr("x", width - 18)
-      .attr("width", 18)
-      .attr("height", 18)
-      .style("fill", color)
-      .attr("id", function (d, i) {
-        return "id" + d.replace(/\s/g, '');
-      })
-      .on("mouseover",function(){
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", color)
+    .attr("id", function (d, i) {
+      return "id" + d.replace(/\s/g, '');
+    })
+  .on("mouseover",function(){
 
-        if (active_link === "0") d3.select(this).style("cursor", "pointer");
-        else {
-          if (active_link.split("class").pop() === this.id.split("id").pop()) {
-            d3.select(this).style("cursor", "pointer");
-          } else d3.select(this).style("cursor", "auto");
-        }
-      });
+    if (active_link === "0") d3.select(this).style("cursor", "pointer");
+    else {
+      if (active_link.split("class").pop() === this.id.split("id").pop()) {
+        d3.select(this).style("cursor", "pointer");
+      } else d3.select(this).style("cursor", "auto");
+    }
+  });
 
   legend.append("text")
-      .attr("x", width - 24)
-      .attr("y", 9)
-      .attr("dy", ".35em")
-      .style("text-anchor", "end")
-      .text(function(d) {
-        return type_code_to_legend(d);
-      });
+    .attr("x", width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) {
+      return type_code_to_legend(d);
+    });
 
 }
 

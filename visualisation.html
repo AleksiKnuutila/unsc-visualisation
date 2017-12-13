@@ -212,24 +212,6 @@ label {
         </p>
 
         <select multiple='multiple' style="width:250px" id='target'>
-          <!--
-            <optgroup label="Africa"></optgroup>
-            <optgroup label="Asia">
-            </optgroup>
-            <optgroup label="Central America">
-            </optgroup>
-            <optgroup label="Europe">
-            </optgroup>
-            <optgroup label="Middle East">
-            </optgroup>
-            <optgroup label="North America">
-            </optgroup>
-            <optgroup label="South America">
-            </optgroup>
-            <optgroup label="Global">
-            <option value="Global">Global resolutions</option>
-            </optgroup>
-          -->
         </select>
 
         <input type="button" class="button" onclick="$('#target').select2('val',null); $('#target').trigger({type: 'select2:unselect'});" value="Clear">
@@ -274,7 +256,6 @@ label {
           <label for="switch_left">Mentions</label>
         </div>
         </p>
-        <!--<a href="#modal">Call the modal with data-remodal-id="modal"</a>-->
 
       </div>
     </div>
@@ -292,30 +273,16 @@ $(function(){
         placeholder: "Displaying all - type to search",
         closeOnSelect: false,
         templateResult: function (data) {
-          // We only really care if there is an element to pull classes from
           if (!data.element) {
             return data.text;
           }
-
           var $element = $(data.element);
-
           var $wrapper = $('<span></span>');
           $wrapper.addClass($element[0].className);
-
           $wrapper.text(data.text);
-
           return $wrapper;
         }
       });
-//    $.fn.select2.amd.require(["optgroup-data", "optgroup-results"],
-//        function (OptgroupData, OptgroupResults) {
-//          $('#target').select2({
-//            dataAdapter: OptgroupData,
-//            resultsAdapter: OptgroupResults,
-//            closeOnSelect: false,
-//            placeholder: "Displaying all - type to search"
-//          });
-//        });
   $('#target2').select2(
       {
         placeholder: "Displaying all - type to search",
@@ -397,31 +364,6 @@ $('#target').on("select2:unselect", function(event) {
   if(!old_values) { old_values = []; }
   update_selections();
 });
-
-//$('#target').on("change", function(event) {
-//  vals = $('#target').val();
-//  if('Chad' in vals) {
-//    find_select('Chad').prop('selected', false)
-//    find_select('Chad').attr("aria-selected", false);
-//    $('#target').val('Africa');
-//    $('#target').trigger('change');
-//    $("#target").select2("open");
-//  }
-//});
-
-
-  // make sure that we don't simultaneously select regions and parts of regions
-//  var vals = $('#target').val();
-//  if(vals && vals.length > 1) {
-//    vals.forEach(function(v) {
-//      vals.forEach(function(v2) {
-//        if(area_is_part_of(v,v2)) {
-//          remove_from_selections(v);
-//        }
-//      });
-//    });
-//  }
-//});
 $('#target2').on('change', function (evt) {
   update_selections();
 });
@@ -437,7 +379,6 @@ $('input:radio[name="switch_2"]').change(
         }
     });
 	</script>
-
 
 <div class="remodal" data-remodal-id="modal">
 </div>
