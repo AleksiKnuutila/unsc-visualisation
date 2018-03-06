@@ -84,7 +84,7 @@ var get_type_count = function(data, year, type, selected_countries) {
   resolution_urls[year][type] = [];
   return data.reduce(function(total, element) {
     if (element['Year'] == year && element[type] == 1 && country_is_selected(element.Area, selected_countries)) {
-      resolution_urls[year][type].push(element.URL);
+      resolution_urls[year][type].push([element['UNSC Resolution'],element['URL']]);
       return total + parseInt(element[type]);
     } else {
       return total;
@@ -98,7 +98,7 @@ var get_area_count = function(data, year, area, selected_types) {
     if (element['Year'] == year && (element.Area == area || area_is_part_of(element.Area, area))) {
       for(i=0;i<selected_types.length;i++){
         if(element[selected_types[i]] > 0) {
-          resolution_urls[year][area].push(element.URL);
+          resolution_urls[year][area].push([element['UNSC Resolution'],element['URL']]);
           return total + 1;
         }
       }
@@ -580,8 +580,8 @@ function display_modal(urls, type, year) {
   var inst = $('[data-remodal-id=modal]').remodal();
   html = '<p>The Security Council resolutions for '+ type +' in '+ year +', under the current selections:</p><ul>';
   urls.forEach(function (u) {
-    html += '<li><a target="_blank" href="'+u+'">';
-    html += u.split('=')[1];
+    html += '<li><a target="_blank" href="'+u[1]+'">';
+    html += u[0];
     html += '</a></li>';
   });
   html += '</ul><button data-remodal-action="confirm" class="remodal-confirm">OK</button>';
