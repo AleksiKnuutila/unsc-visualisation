@@ -213,7 +213,7 @@ label {
       <div style="float: left; margin-right: 40px; margin-bottom: 30px;">
 
         <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-        Select areas to display
+        Select geographic areas to display
         </p>
 
         <select multiple='multiple' style="width:250px" id='target'>
@@ -226,10 +226,11 @@ label {
       <div style="float: left; text-align: left; margin-bottom: 30px;margin-right: 40px;">
 
         <p style="text-align: left; margin-top: 0px; margin-bottom: 4px; font-size: 17px; color: #333333; font-weight: bold; font-family: HelveticaNeue-Light, Helvetica Neue Light, Helvetica Neue, Helvetica, Arial, Lucida Grande, sans-serif;">
-        Select resolution types to display
+        Select crime types to display
         </p>
 
         <select multiple='multiple' style="width:250px" id='target2'>
+          <!--
           <option value="Human Trafficking">Human Trafficking</option>
           <option value="Human Smuggling">Human Smuggling</option>
           <option value="Drug Trafficking">Drug Trafficking</option>
@@ -244,6 +245,7 @@ label {
           <option value="Cyber Crime">Cyber Crime</option>
           <option value="Terrorism">Terrorism</option>
           <option value="Kidnapping / Abductions">Kidnapping / Abductions</option>
+          -->
         </select>
 
         <input type="button" class="button" onclick="$('#target2').select2('val',null)" value="Clear">
@@ -257,8 +259,8 @@ label {
         <div class="switch-field">
           <input type="radio" id="switch_right" name="switch_2" id="switch_resolutions" value="Resolutions" checked/ />
           <label for="switch_right" style=" width: 80px; ">Resolutions</label>
-          <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Mentions">
-          <label for="switch_left">Mentions</label>
+          <input type="radio" id="switch_left" name="switch_2" id="switch_mentions" value="Crime types">
+          <label style="width: 90px" for="switch_left">Crime types</label>
         </div>
         </p>
 
@@ -339,8 +341,6 @@ $('#target').on("select2:select", function(event) {
   // remove all children of added area
   if(new_area) {
     new_values = [];
-    console.log('old '+old_values);
-    console.log('last '+new_area);
     old_values.forEach(function(c) {
       if (area_is_part_of(c, new_area) || area_is_parent_of(c, new_area)) {
         find_select(c).removeAttr("selected");
@@ -376,7 +376,7 @@ $('#target2').on('change', function (evt) {
 
 $('input:radio[name="switch_2"]').change(
     function(){
-        if (this.checked && this.value == 'Mentions') {
+        if (this.checked && this.value == 'Crime types') {
           switch_view('mentions','types');
         }
         if (this.checked && this.value == 'Resolutions') {

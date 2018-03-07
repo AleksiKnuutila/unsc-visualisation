@@ -111,20 +111,21 @@ var get_area_count = function(data, year, area, selected_types) {
 
 var resolution_urls = {};
 //var types = ['AS','AT','CC','DT','FC','GT','HS','HT','KN','PI','RT','TE','TR','WT'];
-var types = ['Human Trafficking',
-'Human Smuggling',
-'Drug Trafficking',
-'Arms Smuggling',
-'Arms Trafficking',
-'Resource Trafficking',
-'Wildlife Trafficking',
-'Theft / Armed Robbery',
-'Piracy',
-'Goods Trafficking',
-'Financial Crime',
-'Cyber Crime',
-'Terrorism',
-'Kidnapping / Abductions'];
+//var types = ['Human Trafficking',
+//'Human Smuggling',
+//'Drug Trafficking',
+//'Arms Smuggling',
+//'Arms Trafficking',
+//'Resource Trafficking',
+//'Wildlife Trafficking',
+//'Theft / Armed Robbery',
+//'Piracy',
+//'Goods Trafficking',
+//'Financial Crime',
+//'Cyber Crime',
+//'Terrorism',
+//'Kidnapping / Abductions'];
+var types = [];
 
 var aggregate_by_type = function aggregate_by_type(data, selected_countries, selected_types) {
   resolutions = {};
@@ -309,10 +310,27 @@ var update_data = function update_data(selected_countries, selected_types) {
   })
 }
 
+var get_types = function(sheet) {
+  columns = sheet.columnNames;
+  ind = columns.indexOf('URL');
+  // create selection menu
+  types = columns.slice(ind+1,columns.length-1);
+  target = $('#target2');
+  types.forEach(function(t) {
+    var optgroup = $('<option value="'+t+'">'+t+'</option>"');
+    target.append(optgroup);
+  });
+  return types;
+}
+
 var load_sheet_data = function(data, tabletop) {
   $("#loadingdiv").fadeOut(400);
   $("#loadedcontent").fadeIn(400);
   glob_data = tabletop.sheets('Resolutions').elements;
+  glob_data = glob_data.filter(function(e) {
+    return e['Area'].length > 0
+  });
+  types = get_types(tabletop.sheets('Resolutions'));
   areas = tabletop.sheets('Areas').elements;
   make_chart(areas, glob_data);
 }
@@ -414,7 +432,7 @@ function make_chart(areas, resolutions, units, split_by) {
   if(split_by == 'countries') {
     var y_text = 'Resolutions';
   } else {
-    var y_text = 'Mentions';
+    var y_text = 'Crime types';
   }
 
   svg.append("g")
