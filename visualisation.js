@@ -1,3 +1,5 @@
+var width = 720;
+var height = 400;
 var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/1SyjZImXYewbyYDrybBiQ6039_xrfAsxqDFuOd6OG2_k/edit?usp=sharing';
 //
 // default view when loading page
@@ -7,8 +9,8 @@ var glob_areas = [];
 var glob_data = [];
 
 var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = width - margin.left - margin.right,
+    height = height - margin.top - margin.bottom;
 
 var x = d3.scale.ordinal()
   .rangeRoundBands([0, width-125], .1);
